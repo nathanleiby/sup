@@ -21,19 +21,20 @@ import { Link as RouteLink, Outlet } from "react-router-dom";
 
 const Links = ["Login", "Add", "History"];
 
-const NavLink = ({ children }: { children: ReactNode }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={"md"}
-    _hover={{
-      textDecoration: "none",
-      bg: useColorModeValue("gray.200", "gray.700"),
-    }}
-    href={"#"}
-  >
-    {children}
-  </Link>
+const NavLink = ({ children, to }: { children: ReactNode; to: string }) => (
+  <RouteLink to={to}>
+    <Link
+      px={2}
+      py={1}
+      rounded={"md"}
+      _hover={{
+        textDecoration: "none",
+        bg: useColorModeValue("gray.200", "gray.700"),
+      }}
+    >
+      {children}
+    </Link>
+  </RouteLink>
 );
 
 export default function Root() {
@@ -59,7 +60,9 @@ export default function Root() {
               display={{ base: "none", md: "flex" }}
             >
               {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+                <NavLink key={link} to={link}>
+                  {link}
+                </NavLink>
               ))}
             </HStack>
           </HStack>
@@ -73,7 +76,7 @@ export default function Root() {
                   mr={4}
                   leftIcon={<AddIcon />}
                 >
-                  Action
+                  Add
                 </Button>
               </Link>
             </RouteLink>
@@ -106,7 +109,9 @@ export default function Root() {
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
               {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+                <NavLink key={link} to={link}>
+                  {link}
+                </NavLink>
               ))}
             </Stack>
           </Box>
