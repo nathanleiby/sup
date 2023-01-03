@@ -1,6 +1,7 @@
-- [ ] allow inputting what's up
-  - [ ] save with timestamp
+- [x] allow inputting what's up
+  - [x] save with timestamp
 - [ ] allow tagging current
+      https://chakra-ui.com/docs/components/tag
 - [ ] allow tagging previous entries
 - [ ] allow login with firebase
 - [ ] save events remotely (firebase, google auth)
@@ -11,6 +12,7 @@
 
 nice-to-have:
 
+- view history by day
 - calendar view
   - in app
   - (export as viewable into Gcal, compare vs planned time?)
