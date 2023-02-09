@@ -19,7 +19,7 @@ import {
 import { ReactNode } from "react";
 import { Link as RouteLink, Outlet } from "react-router-dom";
 
-const Links = ["Login", "Add", "History"];
+const Links = ["Login", "Add", "History", "Todos", "Add_Todo"];
 
 const NavLink = ({ children, to }: { children: ReactNode; to: string }) => (
   <RouteLink to={to}>

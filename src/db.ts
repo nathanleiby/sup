@@ -8,14 +8,24 @@ export interface Entry {
   notes: string;
 }
 
+export interface TodoItem {
+  id?: number;
+  created_at: Date;
+  summary: string;
+  notes: string;
+  tags: string[];
+}
+
 export class MySubClassedDexie extends Dexie {
   entries!: Table<Entry>;
+  todoItems!: Table<TodoItem>;
 
   constructor() {
     super("supDatabase");
-    this.version(1).stores({
-      // TODO: We may not need all of thes as indexed props
-      entries: "++id, timestamp, summary, notes", // Primary key and indexed props
+    this.version(2).stores({
+      // Primary key and indexed props
+      entries: "++id, timestamp, summary, notes, todo_id",
+      todoItems: "++id, created_at, summary, notes, tags",
     });
   }
 }

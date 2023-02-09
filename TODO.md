@@ -9,6 +9,11 @@
 - [ ] ping reminders
   - bootstrap: DIY every 30m reminder to self
 - [ ] good UX on phone too
+- [ ] try out Mantine for component lib
+- [ ] TODOs
+  - [x] Add them as a concept
+  - [x] Add tags to TODOs
+  - [ ] Allow autocompleting a TODO when writing sup
 
 nice-to-have:
 
