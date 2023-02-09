@@ -12,12 +12,28 @@ import {
 import { formatRelative } from "date-fns";
 import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
+import { colors } from "./colors";
 import { db } from "./db";
 
 export default function History() {
   const results = useLiveQuery(() =>
     db.todoItems.orderBy("created_at").reverse().limit(10).toArray()
   );
+
+  const allTags = _.chain(results)
+    .map((todo) => todo.tags)
+    .concat()
+    .flatten()
+    .value();
+
+  const darkModeBgColors = colors.filter((c) => c.startsWith("dark"));
+
+  const tagToColor: { [tag: string]: string } = {};
+  allTags.forEach((tag) => {
+    if (!tagToColor[tag]) {
+      tagToColor[tag] = _.sample(darkModeBgColors)!;
+    }
+  });
 
   // consider using react-table for built-in sorting support
   // https://chakra-ui.com/getting-started/with-react-table
@@ -46,10 +62,12 @@ export default function History() {
                   <Td>{summary}</Td>
                   <Td>{notes}</Td>
                   <Td>
-                    {tags.map((t) => {
+                    {tags.map((t, idx) => {
                       return (
                         <>
-                          <Tag>{t}</Tag>{" "}
+                          <Tag key={idx} background={tagToColor[t]}>
+                            {t}
+                          </Tag>{" "}
                         </>
                       );
                     })}

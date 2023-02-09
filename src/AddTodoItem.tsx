@@ -27,7 +27,7 @@ export default function HookForm() {
         created_at: new Date(),
         tags: tags.split(","),
       });
-      navigate("/history");
+      navigate("/todos");
     };
     asyncWrapper().catch(console.error);
   };

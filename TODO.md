@@ -14,6 +14,8 @@
   - [x] Add them as a concept
   - [x] Add tags to TODOs
   - [ ] Allow autocompleting a TODO when writing sup
+  - [ ] Toggle "is complete"
+  - [ ] Filter by params ("is complete", tags, etc)
 
 nice-to-have:
 
@@ -21,4 +23,7 @@ nice-to-have:
 - calendar view
   - in app
   - (export as viewable into Gcal, compare vs planned time?)
--
+
+Future
+
+- .. merge with "triage" dream?

@@ -6,6 +6,7 @@ export interface Entry {
   timestamp: Date;
   summary: string;
   notes: string;
+  related_todo?: number;
 }
 
 export interface TodoItem {
