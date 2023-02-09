@@ -3,6 +3,7 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AddEntry from "./AddEntry";
 import AddTodoItem from "./AddTodoItem";
+import Entry from "./Entry";
 import History from "./History";
 import Login from "./Login";
 import Root from "./Root";
@@ -40,6 +41,13 @@ const router = createBrowserRouter([
       {
         path: "history",
         element: <History />,
+        // TODO: get this routing working
+        children: [
+          {
+            path: "*",
+            element: <Entry />,
+          },
+        ],
       },
       {
         path: "todos",

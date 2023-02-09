@@ -6,7 +6,7 @@ export interface Entry {
   timestamp: Date;
   summary: string;
   notes: string;
-  related_todo?: number;
+  todo_id?: number;
 }
 
 export interface TodoItem {
@@ -23,7 +23,7 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super("supDatabase");
-    this.version(2).stores({
+    this.version(3).stores({
       // Primary key and indexed props
       entries: "++id, timestamp, summary, notes, todo_id",
       todoItems: "++id, created_at, summary, notes, tags",

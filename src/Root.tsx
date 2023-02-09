@@ -19,7 +19,7 @@ import {
 import { ReactNode } from "react";
 import { Link as RouteLink, Outlet } from "react-router-dom";
 
-const Links = ["Login", "Add", "History", "Todos", "Add_Todo"];
+const Links = ["Login", "History", "Todos"];
 
 const NavLink = ({ children, to }: { children: ReactNode; to: string }) => (
   <RouteLink to={to}>
@@ -76,7 +76,20 @@ export default function Root() {
                   mr={4}
                   leftIcon={<AddIcon />}
                 >
-                  Add
+                  Add Sup
+                </Button>
+              </Link>
+            </RouteLink>
+            <RouteLink to="/add_todo">
+              <Link>
+                <Button
+                  variant={"solid"}
+                  colorScheme={"teal"}
+                  size={"sm"}
+                  mr={4}
+                  leftIcon={<AddIcon />}
+                >
+                  Add Todo
                 </Button>
               </Link>
             </RouteLink>

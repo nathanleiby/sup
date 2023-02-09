@@ -16,8 +16,10 @@
   - [ ] Allow autocompleting a TODO when writing sup
   - [ ] Toggle "is complete"
   - [ ] Filter by params ("is complete", tags, etc)
+  - [ ] get routing to single TODO working
+    - [ ] then view/edit/delete from single TODO page
 
-nice-to-have:
+## nice-to-have:
 
 - view history by day
 - calendar view
@@ -27,3 +29,5 @@ nice-to-have:
 Future
 
 - .. merge with "triage" dream?
+- MIT or some kind of "focus" view
+- Pomodoro / time tracking
