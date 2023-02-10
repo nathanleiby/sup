@@ -5,6 +5,7 @@ import {
   Tag,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -39,6 +40,7 @@ export default function History() {
   // https://chakra-ui.com/getting-started/with-react-table
   return (
     <>
+      <Text fontSize="3xl">Todos</Text>
       <Spacer height={4} />
       <TableContainer>
         <Table colorScheme="teal">

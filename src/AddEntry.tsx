@@ -35,8 +35,7 @@ export default function HookForm() {
 
   return (
     <>
-      {/* TODO: how to tweak title size */}
-      <Text size={""}>Add Sup</Text>
+      <Text fontSize="3xl">Add Sup</Text>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={Boolean(errors.summary)}>
           <FormLabel htmlFor="summary">Summary</FormLabel>

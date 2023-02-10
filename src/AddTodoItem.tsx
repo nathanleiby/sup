@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Text,
 } from "@chakra-ui/react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -33,41 +34,48 @@ export default function HookForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl isInvalid={Boolean(errors.summary)}>
-        <FormLabel htmlFor="summary">Summary</FormLabel>
-        <Input
-          id="summary"
-          placeholder="summary"
-          {...register("summary", {
-            required: "Summary is required",
-            minLength: { value: 4, message: "Minimum length should be 4" },
-          })}
-        />
-        <FormErrorMessage>
-          {errors.summary?.message?.toString()}
-        </FormErrorMessage>
-      </FormControl>
-      <FormControl isInvalid={Boolean(errors.notes)}>
-        <FormLabel htmlFor="notes">Notes</FormLabel>
-        <Input id="notes" placeholder="notes" {...register("notes")} />
-        <FormErrorMessage>{errors.notes?.message?.toString()}</FormErrorMessage>
-      </FormControl>
-      {/* TODO: want: multi-select with autocomplete for existing or add new */}
-      <FormControl isInvalid={Boolean(errors.notes)}>
-        <FormLabel htmlFor="tags">Tags</FormLabel>
-        <Input id="tags" placeholder="tags" {...register("tags")} />
-        <FormErrorMessage>{errors.tags?.message?.toString()}</FormErrorMessage>
-      </FormControl>
-      <Button
-        mt={4}
-        colorScheme="teal"
-        isLoading={isSubmitting}
-        type="submit"
-        disabled={isSubmitting}
-      >
-        Submit
-      </Button>
-    </form>
+    <>
+      <Text fontSize="3xl">Add Todo</Text>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl isInvalid={Boolean(errors.summary)}>
+          <FormLabel htmlFor="summary">Summary</FormLabel>
+          <Input
+            id="summary"
+            placeholder="summary"
+            {...register("summary", {
+              required: "Summary is required",
+              minLength: { value: 4, message: "Minimum length should be 4" },
+            })}
+          />
+          <FormErrorMessage>
+            {errors.summary?.message?.toString()}
+          </FormErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={Boolean(errors.notes)}>
+          <FormLabel htmlFor="notes">Notes</FormLabel>
+          <Input id="notes" placeholder="notes" {...register("notes")} />
+          <FormErrorMessage>
+            {errors.notes?.message?.toString()}
+          </FormErrorMessage>
+        </FormControl>
+        {/* TODO: want: multi-select with autocomplete for existing or add new */}
+        <FormControl isInvalid={Boolean(errors.notes)}>
+          <FormLabel htmlFor="tags">Tags</FormLabel>
+          <Input id="tags" placeholder="tags" {...register("tags")} />
+          <FormErrorMessage>
+            {errors.tags?.message?.toString()}
+          </FormErrorMessage>
+        </FormControl>
+        <Button
+          mt={4}
+          colorScheme="teal"
+          isLoading={isSubmitting}
+          type="submit"
+          disabled={isSubmitting}
+        >
+          Submit
+        </Button>
+      </form>
+    </>
   );
 }
