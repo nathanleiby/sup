@@ -187,7 +187,7 @@ export function TableSort({ data }: TableSortProps) {
           value={search}
           onChange={handleSearchChange}
         />
-        <NavLink to="/add_todo">
+        <NavLink to="/todos/create">
           <Button>Add Todo (+)</Button>
         </NavLink>
       </div>

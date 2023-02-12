@@ -243,8 +243,8 @@ export function HeaderTabsColored({ user }: HeaderTabsProps) {
           }}
         >
           <Tabs.List>
-            <RouteLink to="/history">
-              <Tabs.Tab value="history">History (sups)</Tabs.Tab>
+            <RouteLink to="/sups">
+              <Tabs.Tab value="sups">Sups</Tabs.Tab>
             </RouteLink>
             <RouteLink to="/todos">
               <Tabs.Tab value="todos">Todos</Tabs.Tab>

@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Box, NumberInput, Text, TextInput } from "@mantine/core";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "./db";
 
@@ -15,19 +15,18 @@ export default function Entry() {
   const { summary, notes, todo_id } = entry;
 
   return (
-    <form>
-      <FormControl>
-        <FormLabel htmlFor="summary">Summary</FormLabel>
-        <Input disabled id="summary" placeholder="summary" value={summary} />
-      </FormControl>
-      <FormControl>
-        <FormLabel htmlFor="notes">Notes</FormLabel>
-        <Input disabled id="notes" placeholder="notes" value={notes} />
-      </FormControl>
-      <FormControl>
-        <FormLabel htmlFor="todo_id">Todo ID</FormLabel>
-        <Input disabled id="todo_id" placeholder="todo_id" value={todo_id} />
-      </FormControl>
-    </form>
+    <>
+      <Text size={36}>Add Sup</Text>
+      <Box maw={400} mx="auto">
+        <TextInput
+          label="Summary"
+          placeholder="Summary"
+          withAsterisk
+          value={summary}
+        />
+        <TextInput label="Notes" placeholder="Notes" mt="md" />
+        <NumberInput label="Todo ID" placeholder="Todo ID" mt="md" />
+      </Box>
+    </>
   );
 }

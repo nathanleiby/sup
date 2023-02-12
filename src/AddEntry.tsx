@@ -1,80 +1,77 @@
 import {
+  Box,
   Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
+  Group,
+  NumberInput,
   Text,
-} from "@chakra-ui/react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+  TextInput,
+} from "@mantine/core";
+import { hasLength, useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { db } from "./db";
 
-export default function HookForm() {
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-  } = useForm();
+export default function AddEntry() {
+  const form = useForm({
+    initialValues: {
+      summary: "",
+      notes: "",
+      todo_id: undefined,
+    },
+
+    validate: {
+      summary: hasLength(
+        { min: 3 },
+        "Summary must be at least 3 characters long"
+      ),
+    },
+  });
 
   const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<FieldValues> = (values) => {
-    const { summary, notes, todo_id } = values;
-    const asyncWrapper = async () => {
-      const id = await db.entries.add({
-        summary,
-        notes,
-        timestamp: new Date(),
-        todo_id,
-      });
-      navigate("/history");
-    };
-    asyncWrapper().catch(console.error);
-  };
-
   return (
     <>
-      <Text fontSize="3xl">Add Sup</Text>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl isInvalid={Boolean(errors.summary)}>
-          <FormLabel htmlFor="summary">Summary</FormLabel>
-          <Input
-            id="summary"
-            placeholder="summary"
-            {...register("summary", {
-              required: "Summary is required",
-              minLength: { value: 4, message: "Minimum length should be 4" },
-            })}
-          />
-          <FormErrorMessage>
-            {errors.summary?.message?.toString()}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={Boolean(errors.notes)}>
-          <FormLabel htmlFor="notes">Notes</FormLabel>
-          <Input id="notes" placeholder="notes" {...register("notes")} />
-          <FormErrorMessage>
-            {errors.notes?.message?.toString()}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={Boolean(errors.notes)}>
-          <FormLabel htmlFor="todo_id">Todo ID</FormLabel>
-          <Input id="todo_id" placeholder="todo_id" {...register("todo_id")} />
-          <FormErrorMessage>
-            {errors.notes?.message?.toString()}
-          </FormErrorMessage>
-        </FormControl>
-        <Button
-          mt={4}
-          colorScheme="teal"
-          isLoading={isSubmitting}
-          type="submit"
-          disabled={isSubmitting}
-        >
-          Submit
-        </Button>
-      </form>
+      <Text size={36}>Add Sup</Text>
+      <Box
+        component="form"
+        maw={400}
+        mx="auto"
+        onSubmit={form.onSubmit((values) => {
+          const { summary, notes, todo_id } = values;
+          const asyncWrapper = async () => {
+            const id = await db.entries.add({
+              summary,
+              notes,
+              timestamp: new Date(),
+              todo_id,
+            });
+            navigate("/sups");
+          };
+          asyncWrapper().catch(console.error);
+        })}
+      >
+        <TextInput
+          label="Summary"
+          placeholder="Summary"
+          withAsterisk
+          {...form.getInputProps("summary")}
+        />
+        <TextInput
+          label="Notes"
+          placeholder="Notes"
+          mt="md"
+          {...form.getInputProps("notes")}
+        />
+        <NumberInput
+          label="Todo ID"
+          placeholder="Todo ID"
+          mt="md"
+          {...form.getInputProps("todo_id")}
+        />
+
+        <Group position="right" mt="md">
+          <Button type="submit">Submit</Button>
+        </Group>
+      </Box>
     </>
   );
 }

@@ -1,70 +1,115 @@
 import {
-  Box,
+  Anchor,
   Button,
   Checkbox,
-  Flex,
-  FormControl,
-  FormLabel,
-  Heading,
-  Input,
-  Link,
+  Divider,
+  Group,
+  Paper,
+  PaperProps,
+  PasswordInput,
   Stack,
   Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+  TextInput,
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { upperFirst, useToggle } from "@mantine/hooks";
+import { GoogleButton } from "./SocialButtons";
 
-export default function Login() {
+export default function Login(props: PaperProps) {
+  const [type, toggle] = useToggle(["login", "register"]);
+  const form = useForm({
+    initialValues: {
+      email: "",
+      name: "",
+      password: "",
+      terms: true,
+    },
+
+    validate: {
+      email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
+      password: (val) =>
+        val.length <= 6
+          ? "Password should include at least 6 characters"
+          : null,
+    },
+  });
+
   return (
-    <Flex
-      minH={"100vh"}
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
-    >
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-        <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Sign in to your account</Heading>
-          <Text fontSize={"lg"} color={"gray.600"}>
-            to enjoy all of our cool <Link color={"blue.400"}>features</Link> ✌️
-          </Text>
+    <Paper radius="md" p="xl" withBorder {...props}>
+      <Text size="lg" weight={500}>
+        Welcome to Mantine, {type} with
+      </Text>
+
+      <Group grow mb="md" mt="md">
+        <GoogleButton radius="xl">Google</GoogleButton>
+      </Group>
+
+      <Divider label="Or continue with email" labelPosition="center" my="lg" />
+
+      <form onSubmit={form.onSubmit(() => {})}>
+        <Stack>
+          {type === "register" && (
+            <TextInput
+              label="Name"
+              placeholder="Your name"
+              value={form.values.name}
+              onChange={(event) =>
+                form.setFieldValue("name", event.currentTarget.value)
+              }
+            />
+          )}
+
+          <TextInput
+            required
+            label="Email"
+            placeholder="hello@mantine.dev"
+            value={form.values.email}
+            onChange={(event) =>
+              form.setFieldValue("email", event.currentTarget.value)
+            }
+            error={form.errors.email && "Invalid email"}
+          />
+
+          <PasswordInput
+            required
+            label="Password"
+            placeholder="Your password"
+            value={form.values.password}
+            onChange={(event) =>
+              form.setFieldValue("password", event.currentTarget.value)
+            }
+            error={
+              form.errors.password &&
+              "Password should include at least 6 characters"
+            }
+          />
+
+          {type === "register" && (
+            <Checkbox
+              label="I accept terms and conditions"
+              checked={form.values.terms}
+              onChange={(event) =>
+                form.setFieldValue("terms", event.currentTarget.checked)
+              }
+            />
+          )}
         </Stack>
-        <Box
-          rounded={"lg"}
-          bg={useColorModeValue("white", "gray.700")}
-          boxShadow={"lg"}
-          p={8}
-        >
-          <Stack spacing={4}>
-            <FormControl id="email">
-              <FormLabel>Email address</FormLabel>
-              <Input type="email" />
-            </FormControl>
-            <FormControl id="password">
-              <FormLabel>Password</FormLabel>
-              <Input type="password" />
-            </FormControl>
-            <Stack spacing={10}>
-              <Stack
-                direction={{ base: "column", sm: "row" }}
-                align={"start"}
-                justify={"space-between"}
-              >
-                <Checkbox>Remember me</Checkbox>
-                <Link color={"blue.400"}>Forgot password?</Link>
-              </Stack>
-              <Button
-                bg={"blue.400"}
-                color={"white"}
-                _hover={{
-                  bg: "blue.500",
-                }}
-              >
-                Sign in
-              </Button>
-            </Stack>
-          </Stack>
-        </Box>
-      </Stack>
-    </Flex>
+
+        <Group position="apart" mt="xl">
+          <Anchor
+            component="button"
+            type="button"
+            color="dimmed"
+            onClick={() => toggle()}
+            size="xs"
+          >
+            {type === "register"
+              ? "Already have an account? Login"
+              : "Don't have an account? Register"}
+          </Anchor>
+          <Button type="submit">{upperFirst(type)}</Button>
+        </Group>
+      </form>
+    </Paper>
   );
 }
