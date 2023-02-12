@@ -1,7 +1,7 @@
 import { Box, Button, Group, Text, TextInput } from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
-import { db } from "./db";
+import { db } from "../db";
 
 export default function AddTodoItem() {
   const form = useForm({

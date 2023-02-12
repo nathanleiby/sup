@@ -1,8 +1,11 @@
 import { formatRelative } from "date-fns";
 import { useLiveQuery } from "dexie-react-hooks";
-import { db, Entry } from "./db";
+import _ from "lodash";
+import { colors } from "../colors";
+import { db, TodoItem } from "../db";
 
 import {
+  Badge,
   Button,
   Center,
   createStyles,
@@ -20,7 +23,7 @@ import {
   IconSearch,
   IconSelector,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -47,7 +50,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-type RowData = Entry;
+type RowData = TodoItem;
 
 interface TableSortProps {
   data: RowData[];
@@ -121,6 +124,19 @@ function sortData(
 }
 
 export function TableSort({ data }: TableSortProps) {
+  const allTags = _.chain(data)
+    .map((todo) => todo.tags)
+    .concat()
+    .flatten()
+    .value();
+
+  const tagToColor: { [tag: string]: string } = {};
+  allTags.forEach((tag) => {
+    if (!tagToColor[tag]) {
+      tagToColor[tag] = `${_.sample(colors)!}.${_.sample([5, 6, 7, 8, 9])}`;
+    }
+  });
+
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
@@ -144,10 +160,20 @@ export function TableSort({ data }: TableSortProps) {
   const rows = sortedData.map((row) => (
     <tr key={row.id}>
       <td>{row.id}</td>
-      <td>{formatRelative(row.timestamp, new Date())}</td>
+      <td>{formatRelative(row.created_at, new Date())}</td>
       <td>{row.summary}</td>
       <td>{row.notes}</td>
-      <td>{row.todo_id}</td>
+      <td>
+        {row.tags.map((t, idx) => {
+          return (
+            <Fragment key={idx}>
+              <Badge key={idx} color={tagToColor[t]}>
+                {t}
+              </Badge>{" "}
+            </Fragment>
+          );
+        })}
+      </td>
     </tr>
   ));
 
@@ -161,8 +187,8 @@ export function TableSort({ data }: TableSortProps) {
           value={search}
           onChange={handleSearchChange}
         />
-        <NavLink to="/sups/create">
-          <Button>Add Sup (+)</Button>
+        <NavLink to="/todos/create">
+          <Button>Add Todo (+)</Button>
         </NavLink>
       </div>
       <Table
@@ -180,9 +206,9 @@ export function TableSort({ data }: TableSortProps) {
               Name
             </Th>
             <Th
-              sorted={sortBy === "timestamp"}
+              sorted={sortBy === "created_at"}
               reversed={reverseSortDirection}
-              onSort={() => setSorting("timestamp")}
+              onSort={() => setSorting("created_at")}
             >
               Created at
             </Th>
@@ -201,11 +227,11 @@ export function TableSort({ data }: TableSortProps) {
               Notes
             </Th>
             <Th
-              sorted={sortBy === "todo_id"}
+              sorted={sortBy === "tags"}
               reversed={reverseSortDirection}
-              onSort={() => setSorting("todo_id")}
+              onSort={() => setSorting("tags")}
             >
-              Todo ID
+              Tags
             </Th>
           </tr>
         </thead>
@@ -229,7 +255,7 @@ export function TableSort({ data }: TableSortProps) {
 
 export default function History() {
   const results = useLiveQuery(() =>
-    db.entries.orderBy("timestamp").reverse().limit(10).toArray()
+    db.todoItems.orderBy("created_at").reverse().limit(10).toArray()
   );
   if (!results) {
     // TODO: Loading indicator

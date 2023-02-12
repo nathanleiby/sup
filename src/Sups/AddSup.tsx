@@ -8,9 +8,9 @@ import {
 } from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
-import { db } from "./db";
+import { db } from "../db";
 
-export default function AddEntry() {
+export default function AddSup() {
   const form = useForm({
     initialValues: {
       summary: "",
