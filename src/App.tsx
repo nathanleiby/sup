@@ -11,6 +11,10 @@ import Todos from "./Todos";
 
 const router = createBrowserRouter([
   {
+    path: "/login",
+    element: <Login />,
+  },
+  {
     path: "/",
     element: <Root />,
     children: [
