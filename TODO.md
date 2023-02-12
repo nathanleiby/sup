@@ -11,11 +11,13 @@
 - [ ] TODOs
   - [x] Add them as a concept
   - [x] Add tags to TODOs
-  - [ ] Allow autocompleting a TODO when writing sup
+  - [x] Allow autocompleting a TODO when writing sup
   - [ ] Toggle "is complete"
   - [ ] Filter by params ("is complete", tags, etc)
-  - [ ] get routing to single TODO working
-    - [ ] then view/edit/delete from single TODO page
+  - [x] get routing to single TODO working
+    - [x] view
+    - [ ] edit
+    - [ ] delete
 
 ## nice-to-have:
 

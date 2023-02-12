@@ -4,9 +4,10 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./Login";
 import Root from "./Root";
 import AddSup from "./Sups/AddSup";
-import Sup, { loader } from "./Sups/Sup";
+import Sup, { supLoader } from "./Sups/Sup";
 import Sups from "./Sups/Sups";
 import AddTodoItem from "./Todos/AddTodoItem";
+import Todo, { todoLoader } from "./Todos/Todo";
 import Todos from "./Todos/Todos";
 
 const router = createBrowserRouter([
@@ -36,7 +37,7 @@ const router = createBrowserRouter([
       {
         path: "sups/:itemId",
         element: <Sup />,
-        loader: loader,
+        loader: supLoader,
       },
       // todos
       {
@@ -46,6 +47,11 @@ const router = createBrowserRouter([
       {
         path: "todos/create",
         element: <AddTodoItem />,
+      },
+      {
+        path: "todos/:itemId",
+        element: <Todo />,
+        loader: todoLoader,
       },
     ],
   },

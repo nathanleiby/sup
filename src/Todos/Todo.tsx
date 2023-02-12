@@ -1,35 +1,35 @@
-import { Box, NumberInput, Text, TextInput } from "@mantine/core";
+import { Box, Text, TextInput } from "@mantine/core";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
-import { db, Entry } from "../db";
+import { db, TodoItem } from "../db";
 
 type LoaderData = {
-  entry?: Entry;
+  todo?: TodoItem;
 };
 
-export const supLoader: LoaderFunction = async ({ params }) => {
+export const todoLoader: LoaderFunction = async ({ params }) => {
   const id = parseInt(params.itemId || "");
   if (!id) {
     return {};
   }
 
-  const entry = await db.entries.get({ id });
+  const todo = await db.todoItems.get({ id });
   const out: LoaderData = {
-    entry,
+    todo,
   };
   return out;
 };
 
-export default function Sup() {
-  const { entry } = useLoaderData() as LoaderData;
-  if (!entry) {
-    return <>no entry found</>;
+export default function Todo() {
+  const { todo } = useLoaderData() as LoaderData;
+  if (!todo) {
+    return <>no todo found</>;
   }
 
-  const { summary, notes, todo_id } = entry;
+  const { summary, notes, tags } = todo;
 
   return (
     <>
-      <Text size={36}>View Sup</Text>
+      <Text size={36}>View Todo</Text>
       <Box maw={400} mx="auto">
         <TextInput
           label="Summary"
@@ -45,11 +45,11 @@ export default function Sup() {
           value={notes}
           disabled
         />
-        <NumberInput
-          label="Todo ID"
-          placeholder="Todo ID"
+        <TextInput
+          label="Tags"
+          placeholder="Tags"
           mt="md"
-          value={todo_id}
+          value={tags}
           disabled
         />
       </Box>

@@ -159,7 +159,9 @@ export function TableSort({ data }: TableSortProps) {
 
   const rows = sortedData.map((row) => (
     <tr key={row.id}>
-      <td>{row.id}</td>
+      <td>
+        <NavLink to={`/todos/${row.id}`}>{row.id}</NavLink>
+      </td>
       <td>{formatRelative(row.created_at, new Date())}</td>
       <td>{row.summary}</td>
       <td>{row.notes}</td>
