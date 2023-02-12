@@ -6,6 +6,7 @@ import { db, TodoItem } from "./db";
 
 import {
   Badge,
+  Button,
   Center,
   createStyles,
   Group,
@@ -23,6 +24,7 @@ import {
   IconSelector,
 } from "@tabler/icons-react";
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   th: {
@@ -177,13 +179,18 @@ export function TableSort({ data }: TableSortProps) {
 
   return (
     <ScrollArea>
-      <TextInput
-        placeholder="Search by any field"
-        mb="md"
-        icon={<IconSearch size={14} stroke={1.5} />}
-        value={search}
-        onChange={handleSearchChange}
-      />
+      <div>
+        <TextInput
+          placeholder="Search by any field"
+          mb="md"
+          icon={<IconSearch size={14} stroke={1.5} />}
+          value={search}
+          onChange={handleSearchChange}
+        />
+        <NavLink to="/add_todo">
+          <Button>Add Todo (+)</Button>
+        </NavLink>
+      </div>
       <Table
         horizontalSpacing="md"
         verticalSpacing="xs"

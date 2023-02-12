@@ -119,19 +119,12 @@ const useStyles = createStyles((theme) => ({
 
 interface HeaderTabsProps {
   user: { name: string; image: string };
-  tabs: string[];
 }
 
-export function HeaderTabsColored({ user, tabs }: HeaderTabsProps) {
+export function HeaderTabsColored({ user }: HeaderTabsProps) {
   const { classes, theme, cx } = useStyles();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
-
-  const items = tabs.map((tab) => (
-    <Tabs.Tab value={tab} key={tab}>
-      {tab}
-    </Tabs.Tab>
-  ));
 
   return (
     <div className={classes.header}>
