@@ -1,5 +1,14 @@
-import { Box, Button, Group, Text, TextInput } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Group,
+  MultiSelect,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
+import { useLiveQuery } from "dexie-react-hooks";
+import _ from "lodash";
 import { useNavigate } from "react-router-dom";
 import { db } from "../db";
 
@@ -17,6 +26,23 @@ export default function AddTodoItem() {
         "Summary must be at least 3 characters long"
       ),
     },
+  });
+
+  const results = useLiveQuery(() =>
+    db.todoItems.orderBy("created_at").reverse().limit(100).toArray()
+  );
+  const allTags = _.chain(results || [])
+    .map((item) => item.tags)
+    .flatten()
+    .uniq()
+    .sort()
+    .value();
+
+  const selectOptions = allTags.map((item) => {
+    return {
+      value: item,
+      label: item,
+    };
   });
 
   const navigate = useNavigate();
@@ -54,10 +80,15 @@ export default function AddTodoItem() {
           mt="md"
           {...form.getInputProps("notes")}
         />
-        <TextInput
+        <MultiSelect
+          data={selectOptions}
           label="Tags"
           placeholder="Tags"
           mt="md"
+          searchable
+          clearable
+          creatable
+          getCreateLabel={(query) => `add new tag: ${query}`}
           {...form.getInputProps("tags")}
         />
 

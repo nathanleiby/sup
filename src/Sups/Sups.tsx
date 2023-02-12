@@ -149,7 +149,10 @@ export function TableSort({ data }: TableSortProps) {
       <td>{formatRelative(row.timestamp, new Date())}</td>
       <td>{row.summary}</td>
       <td>{row.notes}</td>
-      <td>{row.todo_id}</td>
+      <td></td>
+      <td>
+        <NavLink to={`/todos/${row.todo_id}`}>{row.todo_id}</NavLink>
+      </td>
     </tr>
   ));
 
@@ -231,7 +234,7 @@ export function TableSort({ data }: TableSortProps) {
 
 export default function Sups() {
   const results = useLiveQuery(() =>
-    db.entries.orderBy("timestamp").reverse().limit(10).toArray()
+    db.entries.orderBy("timestamp").reverse().limit(100).toArray()
   );
   if (!results) {
     // TODO: Loading indicator

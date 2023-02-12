@@ -255,7 +255,7 @@ export function TableSort({ data }: TableSortProps) {
 
 export default function History() {
   const results = useLiveQuery(() =>
-    db.todoItems.orderBy("created_at").reverse().limit(10).toArray()
+    db.todoItems.orderBy("created_at").reverse().limit(100).toArray()
   );
   if (!results) {
     // TODO: Loading indicator

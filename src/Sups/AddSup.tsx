@@ -1,12 +1,6 @@
-import {
-  Box,
-  Button,
-  Group,
-  NumberInput,
-  Text,
-  TextInput,
-} from "@mantine/core";
+import { Box, Button, Group, Select, Text, TextInput } from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
+import { useLiveQuery } from "dexie-react-hooks";
 import { useNavigate } from "react-router-dom";
 import { db } from "../db";
 
@@ -27,6 +21,17 @@ export default function AddSup() {
   });
 
   const navigate = useNavigate();
+
+  const results = useLiveQuery(() =>
+    db.todoItems.orderBy("created_at").reverse().limit(100).toArray()
+  );
+
+  const selectOptions = (results || []).map((item) => {
+    return {
+      value: item.id!.toString(),
+      label: item.summary,
+    };
+  });
 
   return (
     <>
@@ -61,10 +66,13 @@ export default function AddSup() {
           mt="md"
           {...form.getInputProps("notes")}
         />
-        <NumberInput
-          label="Todo ID"
-          placeholder="Todo ID"
+        <Select
+          data={selectOptions}
+          label="Related Todo"
+          placeholder="Related Todo"
           mt="md"
+          searchable
+          clearable
           {...form.getInputProps("todo_id")}
         />
 
