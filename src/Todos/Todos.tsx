@@ -11,6 +11,7 @@ import {
   createStyles,
   Group,
   ScrollArea,
+  Select,
   Table,
   Text,
   TextInput,
@@ -25,6 +26,17 @@ import {
 } from "@tabler/icons-react";
 import { Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
+
+const hashStrToNum = (s: string) => {
+  var hash = 0,
+    i = 0,
+    len = s.length;
+  while (i < len) {
+    hash = ((hash << 5) - hash + s.charCodeAt(i++)) << 0;
+  }
+  const positive = hash + 2147483647 + 1;
+  return positive;
+};
 
 const useStyles = createStyles((theme) => ({
   th: {
@@ -124,22 +136,26 @@ function sortData(
 }
 
 export function TableSort({ data }: TableSortProps) {
-  const allTags = _.chain(data)
+  const uniqTags = _.chain(data)
     .map((todo) => todo.tags)
     .concat()
     .flatten()
+    .uniq()
     .value();
 
   const tagToColor: { [tag: string]: string } = {};
-  allTags.forEach((tag) => {
-    if (!tagToColor[tag]) {
-      tagToColor[tag] = `${_.sample(colors)!}.${_.sample([5, 6, 7, 8, 9])}`;
-    }
+
+  uniqTags.forEach((tag) => {
+    const h = hashStrToNum(tag) + 1;
+    const c = colors[h % colors.length]!;
+    const variant = [5, 6, 7, 8, 9][h % 5];
+    tagToColor[tag] = `${c}.${variant}`;
   });
 
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
+  const [filterByTag, setFilterByTag] = useState("");
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
   const setSorting = (field: keyof RowData) => {
@@ -157,7 +173,11 @@ export function TableSort({ data }: TableSortProps) {
     );
   };
 
-  const rows = sortedData.map((row) => (
+  const sortedAndFilteredData = filterByTag
+    ? _.filter(sortedData, (x) => x.tags.includes(filterByTag))
+    : sortedData;
+
+  const rows = sortedAndFilteredData.map((row) => (
     <tr key={row.id}>
       <td>
         <NavLink to={`/todos/${row.id}`}>{row.id}</NavLink>
@@ -188,6 +208,15 @@ export function TableSort({ data }: TableSortProps) {
           icon={<IconSearch size={14} stroke={1.5} />}
           value={search}
           onChange={handleSearchChange}
+        />
+        <Select
+          placeholder="Filter by tag"
+          mb="md"
+          icon={<IconSearch size={14} stroke={1.5} />}
+          value={filterByTag}
+          onChange={(v) => setFilterByTag(v || "")}
+          data={uniqTags}
+          searchable
         />
         <NavLink to="/todos/create">
           <Button>Add Todo (+)</Button>
