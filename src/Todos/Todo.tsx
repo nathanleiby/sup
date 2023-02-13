@@ -1,5 +1,5 @@
-import { Box, Text, Textarea, TextInput } from "@mantine/core";
-import { LoaderFunction, useLoaderData } from "react-router-dom";
+import { Box, Button, Text, Textarea, TextInput } from "@mantine/core";
+import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
 import { db, TodoItem } from "../db";
 
 type LoaderData = {
@@ -30,6 +30,10 @@ export default function Todo() {
   return (
     <>
       <Text size={36}>View Todo</Text>
+      <NavLink to={`/sups/create?todo_id=${todo.id}`}>
+        <Button>Add Sup (+)</Button>
+      </NavLink>
+
       <Box maw={400} mx="auto">
         <TextInput
           label="Summary"

@@ -1,10 +1,11 @@
-import { Container } from "@mantine/core";
+import { AppShell, useMantineTheme } from "@mantine/core";
 import { SpotlightAction, SpotlightProvider } from "@mantine/spotlight";
 import { IconDashboard, IconSearch } from "@tabler/icons-react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { HeaderTabsColored } from "./HeaderWithTabs";
 
 export default function Root() {
+  const theme = useMantineTheme();
   const navigate = useNavigate();
 
   const actions: SpotlightAction[] = [
@@ -31,12 +32,22 @@ export default function Root() {
         shortcut={["mod + P", "mod + K", "/"]}
         nothingFoundMessage="Nothing found..."
       >
-        <HeaderTabsColored user={{ name: "Nathan", image: "" }} />
-        <Container>
+        <AppShell
+          styles={{
+            main: {
+              background:
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[8]
+                  : theme.colors.gray[0],
+            },
+          }}
+          navbarOffsetBreakpoint="sm"
+          asideOffsetBreakpoint="sm"
+          header={<HeaderTabsColored user={{ name: "nathan", image: "" }} />}
+        >
           <Outlet />
-        </Container>
+        </AppShell>
       </SpotlightProvider>
-      ;
     </>
   );
 }
