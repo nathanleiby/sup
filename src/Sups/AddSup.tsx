@@ -1,5 +1,6 @@
 import { Box, Button, Group, Select, Text, TextInput } from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
+import { useFocusTrap } from "@mantine/hooks";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useNavigate } from "react-router-dom";
 import { db } from "../db";
@@ -21,6 +22,7 @@ export default function AddSup() {
   });
 
   const navigate = useNavigate();
+  const focusRef = useFocusTrap();
 
   const results = useLiveQuery(() =>
     db.todoItems.orderBy("created_at").reverse().limit(100).toArray()
@@ -37,6 +39,7 @@ export default function AddSup() {
     <>
       <Text size={36}>Add Sup</Text>
       <Box
+        ref={focusRef}
         component="form"
         maw={400}
         mx="auto"

@@ -1,5 +1,4 @@
 import { MantineProvider } from "@mantine/core";
-
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./Login";
 import Root from "./Root";

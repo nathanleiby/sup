@@ -18,6 +18,12 @@
     - [x] view
     - [ ] edit
     - [ ] delete
+- Add "go back" from single item to list page (full bread crumbs?)
+- Add keyboard shortcuts
+  - create task
+  - ensure form focus works
+  - "submit" on page (option + enter)
+- keyboard longcuts: Add "command palette" a la VSCode with command and explain
 
 ## nice-to-have:
 

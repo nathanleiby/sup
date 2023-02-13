@@ -7,10 +7,11 @@ import {
   TextInput,
 } from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
+import { useFocusTrap } from "@mantine/hooks";
 import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
 import { useNavigate } from "react-router-dom";
-import { db } from "../db";
+import { db, TodoItem } from "../db";
 
 export default function AddTodoItem() {
   const form = useForm({
@@ -32,7 +33,7 @@ export default function AddTodoItem() {
     db.todoItems.orderBy("created_at").reverse().limit(100).toArray()
   );
   const allTags = _.chain(results || [])
-    .map((item) => item.tags)
+    .map((item: TodoItem) => item.tags)
     .flatten()
     .uniq()
     .sort()
@@ -46,11 +47,13 @@ export default function AddTodoItem() {
   });
 
   const navigate = useNavigate();
+  const focusRef = useFocusTrap();
 
   return (
     <>
       <Text size={36}>Add Todo</Text>
       <Box
+        ref={focusRef}
         component="form"
         maw={400}
         mx="auto"

@@ -8,6 +8,7 @@
     "@mantine/core": "^5.10.3",
     "@mantine/form": "^5.10.3",
     "@mantine/hooks": "^5.10.3",
+    "@mantine/spotlight": "^5.10.3",
     "@tabler/icons-react": "^2.3.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -52,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.191"
   }
 }
