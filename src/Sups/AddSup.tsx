@@ -1,4 +1,12 @@
-import { Box, Button, Group, Select, Text, TextInput } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Group,
+  Select,
+  Text,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
 import { useFocusTrap } from "@mantine/hooks";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -63,7 +71,7 @@ export default function AddSup() {
           withAsterisk
           {...form.getInputProps("summary")}
         />
-        <TextInput
+        <Textarea
           label="Notes"
           placeholder="Notes"
           mt="md"

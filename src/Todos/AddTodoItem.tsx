@@ -4,12 +4,14 @@ import {
   Group,
   MultiSelect,
   Text,
+  Textarea,
   TextInput,
 } from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
 import { useFocusTrap } from "@mantine/hooks";
 import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db, TodoItem } from "../db";
 
@@ -18,7 +20,7 @@ export default function AddTodoItem() {
     initialValues: {
       summary: "",
       notes: "",
-      tags: "",
+      tags: [],
     },
 
     validate: {
@@ -32,19 +34,19 @@ export default function AddTodoItem() {
   const results = useLiveQuery(() =>
     db.todoItems.orderBy("created_at").reverse().limit(100).toArray()
   );
-  const allTags = _.chain(results || [])
+
+  const [createdSelectOptions, setCreatedSelectOptions] = useState<string[]>(
+    []
+  );
+
+  const allExistingTags = _.chain(results || [])
     .map((item: TodoItem) => item.tags)
     .flatten()
     .uniq()
     .sort()
     .value();
 
-  const selectOptions = allTags.map((item) => {
-    return {
-      value: item,
-      label: item,
-    };
-  });
+  const selectOptions = allExistingTags.concat(createdSelectOptions);
 
   const navigate = useNavigate();
   const focusRef = useFocusTrap();
@@ -64,7 +66,7 @@ export default function AddTodoItem() {
               summary,
               notes,
               created_at: new Date(),
-              tags: tags.split(","),
+              tags,
             });
             navigate("/todos");
           };
@@ -77,7 +79,7 @@ export default function AddTodoItem() {
           withAsterisk
           {...form.getInputProps("summary")}
         />
-        <TextInput
+        <Textarea
           label="Notes"
           placeholder="Notes"
           mt="md"
@@ -92,6 +94,10 @@ export default function AddTodoItem() {
           clearable
           creatable
           getCreateLabel={(query) => `add new tag: ${query}`}
+          onCreate={(query) => {
+            setCreatedSelectOptions(createdSelectOptions.concat([query]));
+            return query;
+          }}
           {...form.getInputProps("tags")}
         />
 

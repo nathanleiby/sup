@@ -1,4 +1,4 @@
-import { Box, NumberInput, Text, TextInput } from "@mantine/core";
+import { Box, NumberInput, Text, Textarea, TextInput } from "@mantine/core";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { db, Entry } from "../db";
 
@@ -38,7 +38,7 @@ export default function Sup() {
           value={summary}
           disabled
         />
-        <TextInput
+        <Textarea
           label="Notes"
           placeholder="Notes"
           mt="md"

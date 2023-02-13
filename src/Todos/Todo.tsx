@@ -1,4 +1,4 @@
-import { Box, Text, TextInput } from "@mantine/core";
+import { Box, Text, Textarea, TextInput } from "@mantine/core";
 import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { db, TodoItem } from "../db";
 
@@ -38,7 +38,7 @@ export default function Todo() {
           value={summary}
           disabled
         />
-        <TextInput
+        <Textarea
           label="Notes"
           placeholder="Notes"
           mt="md"
