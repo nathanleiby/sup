@@ -15,8 +15,6 @@ import { db } from "../db";
 
 export default function AddSup() {
   const searchParams = new URLSearchParams(document.location.search);
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const params = searchParams.get("todo_id");
   const todo_id = parseInt(searchParams.get("todo_id") || "") || undefined;
   const summary = searchParams.get("summary") || "";
   const notes = searchParams.get("notes") || "";

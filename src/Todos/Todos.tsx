@@ -226,6 +226,9 @@ export function TableSort({ data }: TableSortProps) {
         horizontalSpacing="md"
         verticalSpacing="xs"
         sx={{ tableLayout: "fixed", minWidth: 700 }}
+        withBorder
+        withColumnBorders
+        highlightOnHover
       >
         <thead>
           <tr>

@@ -30,7 +30,13 @@ export default function Todo() {
   return (
     <>
       <Text size={36}>View Todo</Text>
-      <NavLink to={`/sups/create?todo_id=${todo.id}`}>
+      <NavLink
+        to={`/sups/create?todo_id=${
+          todo.id
+        }&summary=Working on "${summary.substring(0, 20)}${
+          summary.length > 30 ? "..." : ""
+        }"`}
+      >
         <Button>Add Sup (+)</Button>
       </NavLink>
 

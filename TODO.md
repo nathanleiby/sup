@@ -19,7 +19,7 @@
     - [ ] edit
     - [ ] delete
 - Add "go back" from single item to list page (full bread crumbs?)
-- Add keyboard shortcuts
+- Add keyboard shortcuts (https://mantine.dev/hooks/use-hotkeys/)
   - create task
   - ensure form focus works
   - "submit" on page (option + enter)

@@ -3,6 +3,7 @@ import { SpotlightAction, SpotlightProvider } from "@mantine/spotlight";
 import { IconDashboard, IconSearch } from "@tabler/icons-react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { HeaderTabsColored } from "./HeaderWithTabs";
+import PinnedSup from "./Sups/PinnedSup";
 
 export default function Root() {
   const theme = useMantineTheme();
@@ -45,6 +46,7 @@ export default function Root() {
           asideOffsetBreakpoint="sm"
           header={<HeaderTabsColored user={{ name: "nathan", image: "" }} />}
         >
+          <PinnedSup />
           <Outlet />
         </AppShell>
       </SpotlightProvider>
