@@ -33,7 +33,7 @@ export default function Todo() {
       <NavLink
         to={`/sups/create?todo_id=${
           todo.id
-        }&summary=Working on "${summary.substring(0, 20)}${
+        }&summary=Working on "${summary.substring(0, 30)}${
           summary.length > 30 ? "..." : ""
         }"`}
       >

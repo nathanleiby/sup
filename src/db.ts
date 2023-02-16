@@ -15,6 +15,7 @@ export interface TodoItem {
   summary: string;
   notes: string;
   tags: string[];
+  isComplete: boolean;
 }
 
 export class MySubClassedDexie extends Dexie {
@@ -23,10 +24,10 @@ export class MySubClassedDexie extends Dexie {
 
   constructor() {
     super("supDatabase");
-    this.version(3).stores({
+    this.version(4).stores({
       // Primary key and indexed props
       entries: "++id, timestamp, summary, notes, todo_id",
-      todoItems: "++id, created_at, summary, notes, tags",
+      todoItems: "++id, created_at, summary, notes, tags, isComplete",
     });
   }
 }

@@ -8,10 +8,12 @@ import {
   Badge,
   Button,
   Center,
+  Checkbox,
   createStyles,
   Group,
   ScrollArea,
   Select,
+  Switch,
   Table,
   Text,
   TextInput,
@@ -157,6 +159,7 @@ export function TableSort({ data }: TableSortProps) {
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [filterByTag, setFilterByTag] = useState("");
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
+  const [hideCompletedTodos, setHideCompletedTodos] = useState(true);
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -177,10 +180,24 @@ export function TableSort({ data }: TableSortProps) {
     ? _.filter(sortedData, (x) => x.tags.includes(filterByTag))
     : sortedData;
 
-  const rows = sortedAndFilteredData.map((row) => (
+  const sortedAndFilteredData2 = sortedAndFilteredData.filter((todo) =>
+    hideCompletedTodos ? !todo.isComplete : true
+  );
+
+  const rows = sortedAndFilteredData2.map((row) => (
     <tr key={row.id}>
       <td>
         <NavLink to={`/todos/${row.id}`}>{row.id}</NavLink>
+      </td>
+      <td>
+        <Checkbox
+          checked={row.isComplete}
+          onChange={async (e) => {
+            await db.todoItems.update(row.id!, {
+              isComplete: e.target.checked,
+            });
+          }}
+        />
       </td>
       <td>{formatRelative(row.created_at, new Date())}</td>
       <td>{row.summary}</td>
@@ -209,15 +226,23 @@ export function TableSort({ data }: TableSortProps) {
           value={search}
           onChange={handleSearchChange}
         />
-        <Select
-          placeholder="Filter by tag"
-          mb="md"
-          icon={<IconSearch size={14} stroke={1.5} />}
-          value={filterByTag}
-          onChange={(v) => setFilterByTag(v || "")}
-          data={uniqTags}
-          searchable
-        />
+        <Group>
+          <Select
+            placeholder="Filter by tag"
+            mb="md"
+            icon={<IconSearch size={14} stroke={1.5} />}
+            value={filterByTag}
+            onChange={(v) => setFilterByTag(v || "")}
+            data={uniqTags}
+            searchable
+          />
+          <Switch
+            mb="md"
+            label="Hide completed todos"
+            checked={hideCompletedTodos}
+            onChange={(v) => setHideCompletedTodos(v.currentTarget.checked)}
+          />
+        </Group>
         <NavLink to="/todos/create">
           <Button>Add Todo (+)</Button>
         </NavLink>
@@ -237,7 +262,14 @@ export function TableSort({ data }: TableSortProps) {
               reversed={reverseSortDirection}
               onSort={() => setSorting("id")}
             >
-              Name
+              ID
+            </Th>
+            <Th
+              sorted={sortBy === "isComplete"}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting("isComplete")}
+            >
+              Complete?
             </Th>
             <Th
               sorted={sortBy === "created_at"}
@@ -288,11 +320,11 @@ export function TableSort({ data }: TableSortProps) {
 }
 
 export default function History() {
+  // TODO: this isn't re-rendering when I update a todo by clicking a checkbox
   const results = useLiveQuery(() =>
-    db.todoItems.orderBy("created_at").reverse().limit(100).toArray()
+    db.todoItems.orderBy("created_at").reverse().toArray()
   );
   if (!results) {
-    // TODO: Loading indicator
     return null;
   }
 

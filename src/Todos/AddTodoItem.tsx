@@ -67,6 +67,7 @@ export default function AddTodoItem() {
               notes,
               created_at: new Date(),
               tags,
+              isComplete: false,
             });
             navigate("/todos");
           };
