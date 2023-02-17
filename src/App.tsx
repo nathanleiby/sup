@@ -46,6 +46,7 @@ const router = createBrowserRouter([
       {
         path: "todos/create",
         element: <CreateOrEditTodo />,
+        loader: todoLoader, // not really needed, but for consistency with "edit" endpoint
       },
       {
         path: "todos/:itemId",

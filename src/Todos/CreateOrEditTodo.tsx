@@ -12,17 +12,23 @@ import { useFocusTrap } from "@mantine/hooks";
 import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
 import { useState } from "react";
-import { LoaderFunction, useLoaderData, useNavigate } from "react-router-dom";
+import {
+  LoaderFunctionArgs,
+  useLoaderData,
+  useNavigate,
+} from "react-router-dom";
 import { db, TodoItem } from "../db";
 
 type LoaderData = {
   todo?: TodoItem;
 };
 
-export const todoLoader: LoaderFunction = async ({ params }) => {
+export const todoLoader = async ({
+  params,
+}: LoaderFunctionArgs): Promise<LoaderData> => {
   const id = parseInt(params.itemId || "");
   if (!id) {
-    return {};
+    return { todo: undefined };
   }
 
   const todo = await db.todoItems.get({ id });
