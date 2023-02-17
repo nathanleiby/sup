@@ -5,7 +5,7 @@ import Root from "./Root";
 import AddSup from "./Sups/AddSup";
 import Sup, { supLoader } from "./Sups/Sup";
 import Sups from "./Sups/Sups";
-import AddTodoItem from "./Todos/AddTodoItem";
+import CreateOrEditTodo from "./Todos/CreateOrEditTodo";
 import Todo, { todoLoader } from "./Todos/Todo";
 import Todos from "./Todos/Todos";
 
@@ -45,11 +45,16 @@ const router = createBrowserRouter([
       },
       {
         path: "todos/create",
-        element: <AddTodoItem />,
+        element: <CreateOrEditTodo />,
       },
       {
         path: "todos/:itemId",
         element: <Todo />,
+        loader: todoLoader,
+      },
+      {
+        path: "todos/:itemId/edit",
+        element: <CreateOrEditTodo />,
         loader: todoLoader,
       },
     ],

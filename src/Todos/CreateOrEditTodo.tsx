@@ -12,17 +12,38 @@ import { useFocusTrap } from "@mantine/hooks";
 import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { LoaderFunction, useLoaderData, useNavigate } from "react-router-dom";
 import { db, TodoItem } from "../db";
 
-export default function AddTodoItem() {
-  const form = useForm({
-    initialValues: {
-      summary: "",
-      notes: "",
-      tags: [],
-    },
+type LoaderData = {
+  todo?: TodoItem;
+};
 
+export const todoLoader: LoaderFunction = async ({ params }) => {
+  const id = parseInt(params.itemId || "");
+  if (!id) {
+    return {};
+  }
+
+  const todo = await db.todoItems.get({ id });
+  const out: LoaderData = {
+    todo,
+  };
+  return out;
+};
+
+export default function CreateOrEditTodo() {
+  const { todo } = useLoaderData() as LoaderData;
+  const initialValues = todo
+    ? todo
+    : {
+        summary: "",
+        notes: "",
+        tags: [],
+      };
+
+  const form = useForm({
+    initialValues,
     validate: {
       summary: hasLength(
         { min: 3 },
@@ -31,6 +52,7 @@ export default function AddTodoItem() {
     },
   });
 
+  // TODO: update this query to grab unique tags directly
   const results = useLiveQuery(() =>
     db.todoItems.orderBy("created_at").reverse().limit(100).toArray()
   );
@@ -53,7 +75,7 @@ export default function AddTodoItem() {
 
   return (
     <>
-      <Text size={36}>Add Todo</Text>
+      <Text size={36}>{todo ? "Edit" : "Add"} Todo</Text>
       <Box
         ref={focusRef}
         component="form"
@@ -62,13 +84,21 @@ export default function AddTodoItem() {
         onSubmit={form.onSubmit((values) => {
           const { summary, notes, tags } = values;
           const asyncWrapper = async () => {
-            const id = await db.todoItems.add({
-              summary,
-              notes,
-              created_at: new Date(),
-              tags,
-              isComplete: false,
-            });
+            if (todo) {
+              const _ = await db.todoItems.update(todo.id!, {
+                summary,
+                notes,
+                tags,
+              });
+            } else {
+              const _ = await db.todoItems.add({
+                summary,
+                notes,
+                created_at: new Date(),
+                tags,
+                isComplete: false,
+              });
+            }
             navigate("/todos");
           };
           asyncWrapper().catch(console.error);

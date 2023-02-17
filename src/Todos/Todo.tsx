@@ -39,6 +39,9 @@ export default function Todo() {
       >
         <Button>Add Sup (+)</Button>
       </NavLink>
+      <NavLink to={`/todos/${todo.id}/edit`}>
+        <Button>Edit</Button>
+      </NavLink>
 
       <Box maw={400} mx="auto">
         <TextInput
