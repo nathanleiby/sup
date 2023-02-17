@@ -1,6 +1,7 @@
 import { Box, Button, Text, Textarea, TextInput } from "@mantine/core";
 import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
 import { db, TodoItem } from "../db";
+import { TodoTimeline } from "./TodoTimeline";
 
 type LoaderData = {
   todo?: TodoItem;
@@ -65,6 +66,10 @@ export default function Todo() {
           value={tags}
           disabled
         />
+      </Box>
+
+      <Box>
+        <TodoTimeline todoID={todo.id!} />
       </Box>
     </>
   );
