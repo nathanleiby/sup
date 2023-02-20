@@ -93,6 +93,9 @@ export default function Sups() {
   const results = useLiveQuery(() =>
     db.entries.orderBy("timestamp").reverse().limit(100).toArray()
   );
+  if (!results) {
+    return null;
+  }
 
   return <SupTable data={results || []} />;
 }
