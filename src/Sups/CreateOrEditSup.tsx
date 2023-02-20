@@ -103,7 +103,9 @@ export default function CreateOrEditSup() {
           mt="md"
           searchable
           clearable
-          {...form.getInputProps("todo_id")}
+          {...form.getInputProps("todo_id").value}
+          // string conversion needed to ensure existing value is shown
+          defaultValue={(form.getInputProps("todo_id").value || "").toString()}
         />
 
         <Group position="right" mt="md">
