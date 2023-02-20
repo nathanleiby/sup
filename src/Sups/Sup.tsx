@@ -1,5 +1,6 @@
-import { Box, NumberInput, Text, Textarea, TextInput } from "@mantine/core";
-import { NavLink, useLoaderData } from "react-router-dom";
+import { Text } from "@mantine/core";
+import { useLoaderData } from "react-router-dom";
+import SupBox from "./SupCard";
 import { supLoaderData } from "./supLoader";
 
 export default function Sup() {
@@ -13,13 +14,7 @@ export default function Sup() {
   return (
     <>
       <Text size={36}>View Sup</Text>
-      <Box maw={400} mx="auto">
-        <TextInput label="Summary" value={summary} disabled />
-        <Textarea label="Notes" mt="md" value={notes} disabled />
-        <NavLink to={todo_id ? `/todos/${todo_id}` : "#"}>
-          <NumberInput label="Todo ID" mt="md" value={todo_id} disabled />
-        </NavLink>
-      </Box>
+      <SupBox entry={entry} />
     </>
   );
 }
