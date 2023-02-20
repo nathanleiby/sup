@@ -23,11 +23,12 @@ export const TodoTimeline = (props: TodoTimelineProps) => {
 
   return (
     <Timeline active={1} bulletSize={24} lineWidth={2}>
-      {sups.map((sup) => {
+      {sups.map((sup, supIdx) => {
         return (
           <Timeline.Item
             bullet={<IconGitBranch size={12} />}
             title={sup.summary}
+            key={supIdx}
           >
             <Text color="dimmed" size="sm">
               {sup.notes}{" "}
