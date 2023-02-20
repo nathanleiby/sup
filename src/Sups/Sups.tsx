@@ -1,4 +1,3 @@
-import { formatRelative } from "date-fns";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, Entry } from "../db";
 
@@ -8,7 +7,6 @@ import {
   createStyles,
   Group,
   ScrollArea,
-  Table,
   Text,
   TextInput,
   UnstyledButton,
@@ -20,6 +18,8 @@ import {
   IconSearch,
   IconSelector,
 } from "@tabler/icons-react";
+import { formatRelative } from "date-fns";
+import { DataTable } from "mantine-datatable";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -141,21 +141,6 @@ export function TableSort({ data }: TableSortProps) {
     );
   };
 
-  const rows = sortedData.map((row) => (
-    <tr key={row.id}>
-      <td>
-        <NavLink to={`/sups/${row.id}`}>{row.id}</NavLink>
-      </td>
-      <td>{formatRelative(row.timestamp, new Date())}</td>
-      <td>{row.summary}</td>
-      <td>{row.notes}</td>
-      <td></td>
-      <td>
-        <NavLink to={`/todos/${row.todo_id}`}>{row.todo_id}</NavLink>
-      </td>
-    </tr>
-  ));
-
   return (
     <ScrollArea>
       <div>
@@ -170,64 +155,36 @@ export function TableSort({ data }: TableSortProps) {
           <Button>Add Sup (+)</Button>
         </NavLink>
       </div>
-      <Table
-        horizontalSpacing="md"
-        verticalSpacing="xs"
-        sx={{ tableLayout: "fixed", minWidth: 700 }}
-      >
-        <thead>
-          <tr>
-            <Th
-              sorted={sortBy === "id"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("id")}
-            >
-              ID
-            </Th>
-            <Th
-              sorted={sortBy === "timestamp"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("timestamp")}
-            >
-              Created at
-            </Th>
-            <Th
-              sorted={sortBy === "summary"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("summary")}
-            >
-              Summary
-            </Th>
-            <Th
-              sorted={sortBy === "notes"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("notes")}
-            >
-              Notes
-            </Th>
-            <Th
-              sorted={sortBy === "todo_id"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("todo_id")}
-            >
-              Todo ID
-            </Th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.length > 0 ? (
-            rows
-          ) : (
-            <tr>
-              <td colSpan={5}>
-                <Text weight={500} align="center">
-                  Nothing found
-                </Text>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
+      <DataTable
+        withBorder
+        withColumnBorders
+        striped
+        records={sortedData}
+        columns={[
+          {
+            accessor: "id",
+            render: (record) => {
+              return <NavLink to={`/sups/${record.id}`}>{record.id}</NavLink>;
+            },
+          },
+          {
+            accessor: "timestamp",
+            render: (record) => {
+              return formatRelative(record.timestamp, new Date());
+            },
+          },
+          { accessor: "summary" },
+          { accessor: "notes" },
+          {
+            accessor: "todo_id",
+            render: (record) => {
+              return record.todo_id ? (
+                <NavLink to={`/todos/${record.todo_id}`}>{record.id}</NavLink>
+              ) : null;
+            },
+          },
+        ]}
+      />
     </ScrollArea>
   );
 }
