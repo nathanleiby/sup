@@ -1,5 +1,6 @@
 import { MantineProvider } from "@mantine/core";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { DailyTimeline } from "./DailyTimeline";
 import Login from "./Login";
 import Root from "./Root";
 import CreateOrEditSup from "./Sups/CreateOrEditSup";
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <Login />,
+      },
+      {
+        path: "timeline",
+        element: <DailyTimeline />,
       },
       // sups
       {
