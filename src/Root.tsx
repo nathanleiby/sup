@@ -1,13 +1,18 @@
 import { AppShell, useMantineTheme } from "@mantine/core";
 import { SpotlightAction, SpotlightProvider } from "@mantine/spotlight";
 import { IconDashboard, IconSearch } from "@tabler/icons-react";
+import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { initStoragePersistence } from "./bootstrap";
 import { HeaderTabsColored } from "./HeaderWithTabs";
 import PinnedSup from "./Sups/PinnedSup";
 
 export default function Root() {
   const theme = useMantineTheme();
   const navigate = useNavigate();
+  useEffect(() => {
+    initStoragePersistence();
+  }, []);
 
   const actions: SpotlightAction[] = [
     {
