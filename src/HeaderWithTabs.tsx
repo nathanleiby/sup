@@ -5,9 +5,10 @@ import {
   Header,
   MediaQuery,
   Tabs,
-  Text,
+  Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { IconRipple } from "@tabler/icons-react";
 import { NavLink } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
@@ -130,7 +131,9 @@ export function HeaderTabsColored({ user }: HeaderTabsProps) {
           />
         </MediaQuery>
 
-        <Text size={36}>Sup</Text>
+        <Title>
+          <IconRipple /> Sup
+        </Title>
         <Container>
           <Tabs>
             <Tabs.List>
