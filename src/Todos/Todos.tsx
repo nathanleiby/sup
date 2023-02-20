@@ -1,6 +1,6 @@
-import { formatRelative } from "date-fns";
 import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
+import { DataTable } from "mantine-datatable";
 import { colors } from "../colors";
 import { db, TodoItem } from "../db";
 
@@ -14,7 +14,6 @@ import {
   ScrollArea,
   Select,
   Switch,
-  Table,
   Text,
   TextInput,
   UnstyledButton,
@@ -184,38 +183,6 @@ export function TableSort({ data }: TableSortProps) {
     hideCompletedTodos ? !todo.isComplete : true
   );
 
-  const rows = sortedAndFilteredData2.map((row) => (
-    <tr key={row.id}>
-      <td>
-        <NavLink to={`/todos/${row.id}`}>{row.id}</NavLink>
-      </td>
-      <td>
-        <Checkbox
-          checked={row.isComplete}
-          onChange={async (e) => {
-            await db.todoItems.update(row.id!, {
-              isComplete: e.target.checked,
-            });
-          }}
-        />
-      </td>
-      <td>{formatRelative(row.created_at, new Date())}</td>
-      <td>{row.summary}</td>
-      <td>{row.notes}</td>
-      <td>
-        {row.tags.map((t, idx) => {
-          return (
-            <Fragment key={idx}>
-              <Badge key={idx} color={tagToColor[t]}>
-                {t}
-              </Badge>{" "}
-            </Fragment>
-          );
-        })}
-      </td>
-    </tr>
-  ));
-
   return (
     <ScrollArea>
       <div>
@@ -247,74 +214,51 @@ export function TableSort({ data }: TableSortProps) {
           <Button>Add Todo (+)</Button>
         </NavLink>
       </div>
-      <Table
-        horizontalSpacing="md"
-        verticalSpacing="xs"
-        sx={{ tableLayout: "fixed", minWidth: 700 }}
+      <DataTable
         withBorder
         withColumnBorders
-        highlightOnHover
-      >
-        <thead>
-          <tr>
-            <Th
-              sorted={sortBy === "id"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("id")}
-            >
-              ID
-            </Th>
-            <Th
-              sorted={sortBy === "isComplete"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("isComplete")}
-            >
-              Complete?
-            </Th>
-            <Th
-              sorted={sortBy === "created_at"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("created_at")}
-            >
-              Created at
-            </Th>
-            <Th
-              sorted={sortBy === "summary"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("summary")}
-            >
-              Summary
-            </Th>
-            <Th
-              sorted={sortBy === "notes"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("notes")}
-            >
-              Notes
-            </Th>
-            <Th
-              sorted={sortBy === "tags"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("tags")}
-            >
-              Tags
-            </Th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.length > 0 ? (
-            rows
-          ) : (
-            <tr>
-              <td colSpan={5}>
-                <Text weight={500} align="center">
-                  Nothing found
-                </Text>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
+        striped
+        records={sortedAndFilteredData2}
+        columns={[
+          {
+            accessor: "id",
+            render: (record) => {
+              return <NavLink to={`/todos/${record.id}`}>{record.id}</NavLink>;
+            },
+          },
+          {
+            accessor: "isComplete",
+            render: (record) => {
+              return (
+                <Checkbox
+                  checked={record.isComplete}
+                  onChange={async (e) => {
+                    await db.todoItems.update(record.id!, {
+                      isComplete: e.target.checked,
+                    });
+                  }}
+                />
+              );
+            },
+          },
+          { accessor: "summary" },
+          { accessor: "notes" },
+          {
+            accessor: "tags",
+            render: (record) => {
+              return record.tags.map((t, idx) => {
+                return (
+                  <Fragment key={idx}>
+                    <Badge key={idx} color={tagToColor[t]}>
+                      {t}
+                    </Badge>{" "}
+                  </Fragment>
+                );
+              });
+            },
+          },
+        ]}
+      />
     </ScrollArea>
   );
 }
