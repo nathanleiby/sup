@@ -6,7 +6,7 @@ import Root from "./Root";
 import CreateOrEditSup from "./Sups/CreateOrEditSup";
 import Sup from "./Sups/Sup";
 import { supLoader } from "./Sups/supLoader";
-import Sups from "./Sups/Sups";
+import Sups from "./Sups/SupsTable";
 import CreateOrEditTodo from "./Todos/CreateOrEditTodo";
 import Todo from "./Todos/Todo";
 import { todoLoader } from "./Todos/todoLoader";

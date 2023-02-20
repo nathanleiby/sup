@@ -1,13 +1,13 @@
-/** Check if storage is persisted already.
-  @returns {Promise<boolean>} Promise resolved with true if current origin is
-  using persistent storage, false if not, and undefined if the API is not
-  present.
-*/
-async function isStoragePersisted() {
-  return (await navigator.storage) && navigator.storage.persisted
-    ? navigator.storage.persisted()
-    : undefined;
-}
+// /** Check if storage is persisted already.
+//   @returns {Promise<boolean>} Promise resolved with true if current origin is
+//   using persistent storage, false if not, and undefined if the API is not
+//   present.
+// */
+// async function isStoragePersisted() {
+//   return (await navigator.storage) && navigator.storage.persisted
+//     ? navigator.storage.persisted()
+//     : undefined;
+// }
 
 /** Tries to convert to persisted storage.
     @returns {Promise<boolean>} Promise resolved with true if successfully
@@ -19,16 +19,16 @@ async function persist() {
     : undefined;
 }
 
-/** Queries available disk quota.
-    @see https://developer.mozilla.org/en-US/docs/Web/API/StorageEstimate
-    @returns {Promise<{quota: number, usage: number}>} Promise resolved with
-    {quota: number, usage: number} or undefined.
-  */
-async function showEstimatedQuota() {
-  return (await navigator.storage) && navigator.storage.estimate
-    ? navigator.storage.estimate()
-    : undefined;
-}
+// /** Queries available disk quota.
+//     @see https://developer.mozilla.org/en-US/docs/Web/API/StorageEstimate
+//     @returns {Promise<{quota: number, usage: number}>} Promise resolved with
+//     {quota: number, usage: number} or undefined.
+//   */
+// async function showEstimatedQuota() {
+//   return (await navigator.storage) && navigator.storage.estimate
+//     ? navigator.storage.estimate()
+//     : undefined;
+// }
 
 /** Tries to persist storage without ever prompting user.
     @returns {Promise<string>}
