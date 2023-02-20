@@ -1,27 +1,10 @@
 import { Box, Button, Text, Textarea, TextInput } from "@mantine/core";
-import { LoaderFunction, NavLink, useLoaderData } from "react-router-dom";
-import { db, TodoItem } from "../db";
+import { NavLink, useLoaderData } from "react-router-dom";
+import { todoLoaderData } from "./todoLoader";
 import { TodoTimeline } from "./TodoTimeline";
 
-type LoaderData = {
-  todo?: TodoItem;
-};
-
-export const todoLoader: LoaderFunction = async ({ params }) => {
-  const id = parseInt(params.itemId || "");
-  if (!id) {
-    return {};
-  }
-
-  const todo = await db.todoItems.get({ id });
-  const out: LoaderData = {
-    todo,
-  };
-  return out;
-};
-
 export default function Todo() {
-  const { todo } = useLoaderData() as LoaderData;
+  const { todo } = useLoaderData() as todoLoaderData;
   if (!todo) {
     return <>no todo found</>;
   }

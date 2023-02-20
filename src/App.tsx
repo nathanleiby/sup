@@ -2,11 +2,13 @@ import { MantineProvider } from "@mantine/core";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./Login";
 import Root from "./Root";
-import AddSup from "./Sups/AddSup";
-import Sup, { supLoader } from "./Sups/Sup";
+import CreateOrEditSup from "./Sups/CreateOrEditSup";
+import Sup from "./Sups/Sup";
+import { supLoader } from "./Sups/supLoader";
 import Sups from "./Sups/Sups";
 import CreateOrEditTodo from "./Todos/CreateOrEditTodo";
-import Todo, { todoLoader } from "./Todos/Todo";
+import Todo from "./Todos/Todo";
+import { todoLoader } from "./Todos/todoLoader";
 import Todos from "./Todos/Todos";
 
 const router = createBrowserRouter([
@@ -25,17 +27,22 @@ const router = createBrowserRouter([
       },
       // sups
       {
-        path: "sups/create",
-        element: <AddSup />,
-      },
-
-      {
         path: "sups",
         element: <Sups />,
       },
       {
+        path: "sups/create",
+        element: <CreateOrEditSup />,
+        loader: supLoader,
+      },
+      {
         path: "sups/:itemId",
         element: <Sup />,
+        loader: supLoader,
+      },
+      {
+        path: "sups/:itemId/edit",
+        element: <CreateOrEditSup />,
         loader: supLoader,
       },
       // todos

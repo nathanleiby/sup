@@ -1,26 +1,9 @@
 import { Box, NumberInput, Text, Textarea, TextInput } from "@mantine/core";
-import { LoaderFunction, useLoaderData } from "react-router-dom";
-import { db, Entry } from "../db";
-
-type LoaderData = {
-  entry?: Entry;
-};
-
-export const supLoader: LoaderFunction = async ({ params }) => {
-  const id = parseInt(params.itemId || "");
-  if (!id) {
-    return {};
-  }
-
-  const entry = await db.entries.get({ id });
-  const out: LoaderData = {
-    entry,
-  };
-  return out;
-};
+import { NavLink, useLoaderData } from "react-router-dom";
+import { supLoaderData } from "./supLoader";
 
 export default function Sup() {
-  const { entry } = useLoaderData() as LoaderData;
+  const { entry } = useLoaderData() as supLoaderData;
   if (!entry) {
     return <>no entry found</>;
   }
@@ -31,27 +14,11 @@ export default function Sup() {
     <>
       <Text size={36}>View Sup</Text>
       <Box maw={400} mx="auto">
-        <TextInput
-          label="Summary"
-          placeholder="Summary"
-          withAsterisk
-          value={summary}
-          disabled
-        />
-        <Textarea
-          label="Notes"
-          placeholder="Notes"
-          mt="md"
-          value={notes}
-          disabled
-        />
-        <NumberInput
-          label="Todo ID"
-          placeholder="Todo ID"
-          mt="md"
-          value={todo_id}
-          disabled
-        />
+        <TextInput label="Summary" value={summary} disabled />
+        <Textarea label="Notes" mt="md" value={notes} disabled />
+        <NavLink to={todo_id ? `/todos/${todo_id}` : "#"}>
+          <NumberInput label="Todo ID" mt="md" value={todo_id} disabled />
+        </NavLink>
       </Box>
     </>
   );

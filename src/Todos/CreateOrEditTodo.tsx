@@ -12,34 +12,12 @@ import { useFocusTrap } from "@mantine/hooks";
 import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
 import { useState } from "react";
-import {
-  LoaderFunctionArgs,
-  useLoaderData,
-  useNavigate,
-} from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { db, TodoItem } from "../db";
-
-type LoaderData = {
-  todo?: TodoItem;
-};
-
-export const todoLoader = async ({
-  params,
-}: LoaderFunctionArgs): Promise<LoaderData> => {
-  const id = parseInt(params.itemId || "");
-  if (!id) {
-    return { todo: undefined };
-  }
-
-  const todo = await db.todoItems.get({ id });
-  const out: LoaderData = {
-    todo,
-  };
-  return out;
-};
+import { todoLoaderData } from "./todoLoader";
 
 export default function CreateOrEditTodo() {
-  const { todo } = useLoaderData() as LoaderData;
+  const { todo } = useLoaderData() as todoLoaderData;
   const initialValues = todo
     ? todo
     : {
@@ -91,21 +69,22 @@ export default function CreateOrEditTodo() {
           const { summary, notes, tags } = values;
           const asyncWrapper = async () => {
             if (todo) {
-              const _ = await db.todoItems.update(todo.id!, {
+              const id = await db.todoItems.update(todo.id!, {
                 summary,
                 notes,
                 tags,
               });
+              navigate(`/todos/${todo.id}`);
             } else {
-              const _ = await db.todoItems.add({
+              const id = await db.todoItems.add({
                 summary,
                 notes,
                 created_at: new Date(),
                 tags,
                 isComplete: false,
               });
+              navigate(`/todos/${id}`);
             }
-            navigate("/todos");
           };
           asyncWrapper().catch(console.error);
         })}

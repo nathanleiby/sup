@@ -10,22 +10,27 @@ import {
 import { hasLength, useForm } from "@mantine/form";
 import { useFocusTrap } from "@mantine/hooks";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { db } from "../db";
+import { supLoaderData } from "./supLoader";
 
-export default function AddSup() {
+export default function CreateOrEditSup() {
   const searchParams = new URLSearchParams(document.location.search);
   const todo_id = parseInt(searchParams.get("todo_id") || "") || undefined;
   const summary = searchParams.get("summary") || "";
   const notes = searchParams.get("notes") || "";
 
-  const form = useForm({
-    initialValues: {
-      summary,
-      notes,
-      todo_id: todo_id?.toString(),
-    },
+  const { entry } = useLoaderData() as supLoaderData;
+  const initialValues = entry
+    ? entry
+    : {
+        todo_id,
+        summary,
+        notes,
+      };
 
+  const form = useForm({
+    initialValues,
     validate: {
       summary: hasLength(
         { min: 3 },
@@ -50,7 +55,7 @@ export default function AddSup() {
 
   return (
     <>
-      <Text size={36}>Add Sup</Text>
+      <Text size={36}>{entry ? "Edit" : "Add"} Sup</Text>
       <Box
         ref={focusRef}
         component="form"
@@ -59,13 +64,22 @@ export default function AddSup() {
         onSubmit={form.onSubmit((values) => {
           const { summary, notes, todo_id } = values;
           const asyncWrapper = async () => {
-            const id = await db.entries.add({
-              summary,
-              notes,
-              timestamp: new Date(),
-              todo_id: todo_id ? parseInt(todo_id) : undefined,
-            });
-            navigate("/sups");
+            if (entry) {
+              const id = await db.entries.update(entry.id!, {
+                summary,
+                notes,
+                todo_id,
+              });
+              navigate(`/sups/${entry.id}`);
+            } else {
+              const id = await db.entries.add({
+                summary,
+                notes,
+                timestamp: new Date(),
+                todo_id,
+              });
+              navigate(`/sups/${id}`);
+            }
           };
           asyncWrapper().catch(console.error);
         })}
