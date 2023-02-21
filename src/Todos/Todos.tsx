@@ -202,6 +202,7 @@ export function TableSort({ data }: TableSortProps) {
             onChange={(v) => setFilterByTag(v || "")}
             data={uniqTags}
             searchable
+            clearable
           />
           <Switch
             mb="md"

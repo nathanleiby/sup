@@ -1,5 +1,7 @@
 import {
+  Anchor,
   Box,
+  Breadcrumbs,
   Button,
   Checkbox,
   Text,
@@ -18,8 +20,18 @@ export default function Todo() {
 
   const { summary, notes, tags, isComplete } = todo;
 
+  const items = [
+    { title: "Todos", href: "/todos" },
+    { title: summary, href: "#" },
+  ].map((item, index) => (
+    <Anchor href={item.href} key={index}>
+      {item.title}
+    </Anchor>
+  ));
+
   return (
     <>
+      <Breadcrumbs separator="→">{items}</Breadcrumbs>
       <Text size={36}>View Todo</Text>
       <NavLink
         to={`/sups/create?todo_id=${
