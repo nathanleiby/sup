@@ -1,8 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, Entry } from "../db";
 
-import { Button, ScrollArea, TextInput } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import { Button, ScrollArea } from "@mantine/core";
 import { formatRelative } from "date-fns";
 import { sortBy } from "lodash";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
@@ -14,41 +13,24 @@ interface SupTableProps {
 }
 
 export function SupTable({ data }: SupTableProps) {
-  const [search, setSearch] = useState("");
-
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
-    columnAccessor: "id",
+    columnAccessor: "timestamp",
     direction: "desc",
   });
   const [records, setRecords] = useState(sortBy(data, "timestamp"));
 
   useEffect(() => {
     const sortedData = sortBy(data, sortStatus.columnAccessor);
-
     setRecords(
       sortStatus.direction === "desc" ? sortedData.reverse() : sortedData
     );
-  }, [sortStatus]);
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setSearch(value);
-    // TODO: add logic to filter data
-    // https://icflorescu.github.io/mantine-datatable/examples/searching-and-filtering
-  };
+  }, [sortStatus, data]);
 
   return (
     <ScrollArea>
       <div>
-        <TextInput
-          placeholder="Search by any field"
-          mb="md"
-          icon={<IconSearch size={14} stroke={1.5} />}
-          value={search}
-          onChange={handleSearchChange}
-        />
         <NavLink to="/sups/create">
-          <Button>Add Sup (+)</Button>
+          <Button mb="md">Add Sup (+)</Button>
         </NavLink>
       </div>
       <DataTable

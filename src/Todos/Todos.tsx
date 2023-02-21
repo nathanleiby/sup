@@ -7,24 +7,15 @@ import { db, TodoItem } from "../db";
 import {
   Badge,
   Button,
-  Center,
   Checkbox,
-  createStyles,
   Group,
   ScrollArea,
   Select,
   Switch,
-  Text,
   TextInput,
-  UnstyledButton,
 } from "@mantine/core";
 import { keys } from "@mantine/utils";
-import {
-  IconChevronDown,
-  IconChevronUp,
-  IconSearch,
-  IconSelector,
-} from "@tabler/icons-react";
+import { IconSearch } from "@tabler/icons-react";
 import { Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -39,64 +30,10 @@ const hashStrToNum = (s: string) => {
   return positive;
 };
 
-const useStyles = createStyles((theme) => ({
-  th: {
-    padding: "0 !important",
-  },
-
-  control: {
-    width: "100%",
-    padding: `${theme.spacing.xs}px ${theme.spacing.md}px`,
-
-    "&:hover": {
-      backgroundColor:
-        theme.colorScheme === "dark"
-          ? theme.colors.dark[6]
-          : theme.colors.gray[0],
-    },
-  },
-
-  icon: {
-    width: 21,
-    height: 21,
-    borderRadius: 21,
-  },
-}));
-
 type RowData = TodoItem;
 
 interface TableSortProps {
   data: RowData[];
-}
-
-interface ThProps {
-  children: React.ReactNode;
-  reversed: boolean;
-  sorted: boolean;
-  onSort(): void;
-}
-
-function Th({ children, reversed, sorted, onSort }: ThProps) {
-  const { classes } = useStyles();
-  const Icon = sorted
-    ? reversed
-      ? IconChevronUp
-      : IconChevronDown
-    : IconSelector;
-  return (
-    <th className={classes.th}>
-      <UnstyledButton onClick={onSort} className={classes.control}>
-        <Group position="apart">
-          <Text weight={500} size="sm">
-            {children}
-          </Text>
-          <Center className={classes.icon}>
-            <Icon size={14} stroke={1.5} />
-          </Center>
-        </Group>
-      </UnstyledButton>
-    </th>
-  );
 }
 
 function filterData(data: RowData[], search: string) {
@@ -155,17 +92,10 @@ export function TableSort({ data }: TableSortProps) {
 
   const [search, setSearch] = useState("");
   const [sortedData, setSortedData] = useState(data);
-  const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
+  const [sortBy] = useState<keyof RowData | null>(null);
   const [filterByTag, setFilterByTag] = useState("");
-  const [reverseSortDirection, setReverseSortDirection] = useState(false);
+  const [reverseSortDirection] = useState(false);
   const [hideCompletedTodos, setHideCompletedTodos] = useState(true);
-
-  const setSorting = (field: keyof RowData) => {
-    const reversed = field === sortBy ? !reverseSortDirection : false;
-    setReverseSortDirection(reversed);
-    setSortBy(field);
-    setSortedData(sortData(data, { sortBy: field, reversed, search }));
-  };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
@@ -212,7 +142,7 @@ export function TableSort({ data }: TableSortProps) {
           />
         </Group>
         <NavLink to="/todos/create">
-          <Button>Add Todo (+)</Button>
+          <Button mb="md">Add Todo (+)</Button>
         </NavLink>
       </div>
       <DataTable
