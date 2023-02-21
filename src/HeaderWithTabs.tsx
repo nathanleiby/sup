@@ -146,6 +146,9 @@ export function HeaderTabsColored({ user }: HeaderTabsProps) {
               <NavLink to="/timeline">
                 <Tabs.Tab value="timeline">Timeline</Tabs.Tab>
               </NavLink>
+              <NavLink to="/settings">
+                <Tabs.Tab value="settings">Settings</Tabs.Tab>
+              </NavLink>
             </Tabs.List>
           </Tabs>
         </Container>

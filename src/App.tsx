@@ -1,8 +1,14 @@
-import { MantineProvider } from "@mantine/core";
+import {
+  ColorScheme,
+  ColorSchemeProvider,
+  MantineProvider,
+} from "@mantine/core";
+import { useColorScheme, useLocalStorage } from "@mantine/hooks";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { DailyTimeline } from "./DailyTimeline";
 import Login from "./Login";
 import Root from "./Root";
+import Settings from "./Settings";
 import CreateOrEditSup from "./Sups/CreateOrEditSup";
 import Sup from "./Sups/Sup";
 import { supLoader } from "./Sups/supLoader";
@@ -29,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "timeline",
         element: <DailyTimeline />,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
       },
       // sups
       {
@@ -75,10 +85,29 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const preferredColorScheme = useColorScheme();
+  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+    key: "mantine-color-scheme",
+    defaultValue: preferredColorScheme,
+    getInitialValueInEffect: true,
+  });
+
+  const toggleColorScheme = (value?: ColorScheme) =>
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS>
-      <RouterProvider router={router} />
-    </MantineProvider>
+    <ColorSchemeProvider
+      colorScheme={colorScheme}
+      toggleColorScheme={toggleColorScheme}
+    >
+      <MantineProvider
+        theme={{ colorScheme }}
+        withGlobalStyles
+        withNormalizeCSS
+      >
+        <RouterProvider router={router} />
+      </MantineProvider>
+    </ColorSchemeProvider>
   );
 }
 
