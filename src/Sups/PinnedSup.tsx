@@ -1,19 +1,30 @@
-import { Accordion, Affix, Card } from "@mantine/core";
+import { Accordion, Affix, Button, Card, Modal } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { useLiveQuery } from "dexie-react-hooks";
+import { useState } from "react";
 import { db } from "../db";
 import SupBox from "./SupCard";
 
 export default function Sup() {
+  const [isFocused, setIsFocused] = useState(false);
   const entry = useLiveQuery(() => db.entries.toCollection().last());
   if (!entry) {
     return <></>;
   }
 
-  const { summary, notes, todo_id } = entry;
+  const { summary } = entry;
 
   return (
     <Affix position={{ top: 0, right: 0 }}>
+      <Modal
+        opened={isFocused}
+        onClose={() => setIsFocused(false)}
+        title="Focus Mode"
+        fullScreen
+      >
+        <SupBox entry={entry} />
+      </Modal>
+
       <Accordion
         chevron={<IconPlus size={16} />}
         styles={{
@@ -29,6 +40,9 @@ export default function Sup() {
           <Accordion.Panel>
             <Card shadow="sm" p="lg" radius="md" withBorder>
               <SupBox entry={entry} />
+              <Button mt="md" onClick={() => setIsFocused(!isFocused)}>
+                Focus
+              </Button>
             </Card>
           </Accordion.Panel>
         </Accordion.Item>
