@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Group,
   MultiSelect,
   Text,
@@ -24,6 +25,7 @@ export default function CreateOrEditTodo() {
         summary: "",
         notes: "",
         tags: [],
+        isComplete: false,
       };
 
   const form = useForm({
@@ -66,13 +68,14 @@ export default function CreateOrEditTodo() {
         maw={400}
         mx="auto"
         onSubmit={form.onSubmit((values) => {
-          const { summary, notes, tags } = values;
+          const { summary, notes, tags, isComplete } = values;
           const asyncWrapper = async () => {
             if (todo) {
               const id = await db.todoItems.update(todo.id!, {
                 summary,
                 notes,
                 tags,
+                isComplete,
               });
               navigate(`/todos/${todo.id}`);
             } else {
@@ -116,6 +119,13 @@ export default function CreateOrEditTodo() {
           }}
           {...form.getInputProps("tags")}
         />
+        {todo && (
+          <Checkbox
+            label="Is Complete"
+            mt="md"
+            {...form.getInputProps("isComplete")}
+          />
+        )}
 
         <Group position="right" mt="md">
           <Button type="submit">Submit</Button>

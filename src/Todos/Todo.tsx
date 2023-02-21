@@ -1,4 +1,11 @@
-import { Box, Button, Text, Textarea, TextInput } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Text,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
 import { NavLink, useLoaderData } from "react-router-dom";
 import { todoLoaderData } from "./todoLoader";
 import { TodoTimeline } from "./TodoTimeline";
@@ -9,7 +16,7 @@ export default function Todo() {
     return <>no todo found</>;
   }
 
-  const { summary, notes, tags } = todo;
+  const { summary, notes, tags, isComplete } = todo;
 
   return (
     <>
@@ -49,6 +56,7 @@ export default function Todo() {
           value={tags}
           disabled
         />
+        <Checkbox label="Is Complete" mt="md" checked={isComplete} disabled />
       </Box>
 
       <Box>
