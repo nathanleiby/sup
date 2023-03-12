@@ -10,12 +10,13 @@ import {
 import { hasLength, useForm } from "@mantine/form";
 import { useFocusTrap } from "@mantine/hooks";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { db } from "../db";
 import { supLoaderData } from "./supLoader";
 
 export default function CreateOrEditSup() {
-  const searchParams = new URLSearchParams(document.location.search);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
   const todo_id = searchParams.get("todo_id") || "";
   const summary = searchParams.get("summary") || "";
   const notes = searchParams.get("notes") || "";
