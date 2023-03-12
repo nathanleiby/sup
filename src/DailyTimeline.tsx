@@ -9,7 +9,7 @@ import { db, Entry } from "./db";
 export interface DailyTimelineProps {}
 export const DailyTimeline = (props: DailyTimelineProps) => {
   const allSups = useLiveQuery(() => {
-    return db.entries.reverse().sortBy("timestamp");
+    return db.sups.reverse().sortBy("timestamp");
   });
   if (!allSups) {
     return null;

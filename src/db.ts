@@ -1,8 +1,9 @@
 // db.ts
 import Dexie, { Table } from "dexie";
+import dexieCloud from "dexie-cloud-addon";
 
 export interface Entry {
-  id?: number;
+  id?: string;
   timestamp: Date;
   summary: string;
   notes: string;
@@ -10,7 +11,7 @@ export interface Entry {
 }
 
 export interface TodoItem {
-  id?: number;
+  id?: string;
   created_at: Date;
   summary: string;
   notes: string;
@@ -19,15 +20,21 @@ export interface TodoItem {
 }
 
 export class MySubClassedDexie extends Dexie {
-  entries!: Table<Entry>;
-  todoItems!: Table<TodoItem>;
+  sups!: Table<Entry>;
+  todos!: Table<TodoItem>;
 
   constructor() {
-    super("supDatabase");
-    this.version(4).stores({
-      // Primary key and indexed props
-      entries: "++id, timestamp, summary, notes, todo_id",
-      todoItems: "++id, created_at, summary, notes, tags, isComplete",
+    console.log("construct!");
+    super("supDatabase", { addons: [dexieCloud] });
+
+    this.version(5).stores({
+      sups: "@id, timestamp, summary, notes, todo_id",
+      todos: "@id, created_at, summary, notes, tags, isComplete",
+    });
+
+    this.cloud.configure({
+      databaseUrl: "https://z08fbafgx.dexie.cloud",
+      requireAuth: true,
     });
   }
 }

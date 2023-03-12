@@ -164,7 +164,7 @@ export function TableSort({ data }: TableSortProps) {
                 <Checkbox
                   checked={record.isComplete}
                   onChange={async (e) => {
-                    await db.todoItems.update(record.id!, {
+                    await db.todos.update(record.id!, {
                       isComplete: e.target.checked,
                     });
                   }}
@@ -197,7 +197,7 @@ export function TableSort({ data }: TableSortProps) {
 export default function History() {
   // TODO: this isn't re-rendering when I update a todo by clicking a checkbox
   const results = useLiveQuery(() =>
-    db.todoItems.orderBy("created_at").reverse().toArray()
+    db.todos.orderBy("created_at").reverse().toArray()
   );
   if (!results) {
     return null;

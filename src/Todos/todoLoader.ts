@@ -6,12 +6,12 @@ export type todoLoaderData = {
 };
 
 export const todoLoader: LoaderFunction = async ({ params }) => {
-  const id = parseInt(params.itemId || "");
+  const id = params.itemId;
   if (!id) {
     return {};
   }
 
-  const todo = await db.todoItems.get({ id });
+  const todo = await db.todos.get({ id });
   const out: todoLoaderData = {
     todo,
   };

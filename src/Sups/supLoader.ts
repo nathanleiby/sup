@@ -6,12 +6,12 @@ export type supLoaderData = {
 };
 
 export const supLoader: LoaderFunction = async ({ params }) => {
-  const id = parseInt(params.itemId || "");
+  const id = params.itemId;
   if (!id) {
     return {};
   }
 
-  const entry = await db.entries.get({ id });
+  const entry = await db.sups.get({ id });
   const out: supLoaderData = {
     entry,
   };

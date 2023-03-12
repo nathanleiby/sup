@@ -6,12 +6,12 @@ import { NavLink } from "react-router-dom";
 import { db } from "../db";
 
 export interface TodoTimelineProps {
-  todoID: number;
+  todoID: string;
 }
 export const TodoTimeline = (props: TodoTimelineProps) => {
   const { todoID } = props;
   const sups = useLiveQuery(() => {
-    return db.entries
+    return db.sups
       .where("todo_id")
       .equals(todoID)
       .reverse()

@@ -7,7 +7,7 @@ import SupBox from "./SupCard";
 
 export default function Sup() {
   const [isFocused, setIsFocused] = useState(false);
-  const entry = useLiveQuery(() => db.entries.toCollection().last());
+  const entry = useLiveQuery(() => db.sups.toCollection().last());
   if (!entry) {
     return <></>;
   }

@@ -40,7 +40,7 @@ export default function CreateOrEditTodo() {
 
   // TODO: update this query to grab unique tags directly
   const results = useLiveQuery(() =>
-    db.todoItems.orderBy("created_at").reverse().limit(100).toArray()
+    db.todos.orderBy("created_at").reverse().limit(100).toArray()
   );
 
   const [createdSelectOptions, setCreatedSelectOptions] = useState<string[]>(
@@ -71,7 +71,7 @@ export default function CreateOrEditTodo() {
           const { summary, notes, tags, isComplete } = values;
           const asyncWrapper = async () => {
             if (todo) {
-              const id = await db.todoItems.update(todo.id!, {
+              const id = await db.todos.update(todo.id!, {
                 summary,
                 notes,
                 tags,
@@ -79,7 +79,7 @@ export default function CreateOrEditTodo() {
               });
               navigate(`/todos/${todo.id}`);
             } else {
-              const id = await db.todoItems.add({
+              const id = await db.todos.add({
                 summary,
                 notes,
                 created_at: new Date(),

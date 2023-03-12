@@ -43,7 +43,7 @@ export default function CreateOrEditSup() {
   const focusRef = useFocusTrap();
 
   const results = useLiveQuery(() =>
-    db.todoItems.orderBy("created_at").reverse().limit(100).toArray()
+    db.todos.orderBy("created_at").reverse().limit(100).toArray()
   );
 
   const selectOptions = (results || []).map((item) => {
@@ -65,14 +65,14 @@ export default function CreateOrEditSup() {
           const { summary, notes, todo_id } = values;
           const asyncWrapper = async () => {
             if (entry) {
-              const id = await db.entries.update(entry.id!, {
+              const id = await db.sups.update(entry.id!, {
                 summary,
                 notes,
                 todo_id,
               });
               navigate(`/sups/${entry.id}`);
             } else {
-              const id = await db.entries.add({
+              const id = await db.sups.add({
                 summary,
                 notes,
                 timestamp: new Date(),
