@@ -16,7 +16,7 @@ import { supLoaderData } from "./supLoader";
 
 export default function CreateOrEditSup() {
   const searchParams = new URLSearchParams(document.location.search);
-  const todo_id = parseInt(searchParams.get("todo_id") || "") || undefined;
+  const todo_id = searchParams.get("todo_id") || "";
   const summary = searchParams.get("summary") || "";
   const notes = searchParams.get("notes") || "";
 
@@ -48,7 +48,7 @@ export default function CreateOrEditSup() {
 
   const selectOptions = (results || []).map((item) => {
     return {
-      value: item.id!.toString(),
+      value: item.id!,
       label: item.summary,
     };
   });
@@ -103,9 +103,7 @@ export default function CreateOrEditSup() {
           mt="md"
           searchable
           clearable
-          {...form.getInputProps("todo_id").value}
-          // string conversion needed to ensure existing value is shown
-          defaultValue={(form.getInputProps("todo_id").value || "").toString()}
+          {...form.getInputProps("todo_id")}
         />
 
         <Group position="right" mt="md">

@@ -7,7 +7,7 @@ export interface Entry {
   timestamp: Date;
   summary: string;
   notes: string;
-  todo_id?: number;
+  todo_id?: string;
 }
 
 export interface TodoItem {
@@ -24,7 +24,6 @@ export class MySubClassedDexie extends Dexie {
   todos!: Table<TodoItem>;
 
   constructor() {
-    console.log("construct!");
     super("supDatabase", { addons: [dexieCloud] });
 
     this.version(5).stores({
