@@ -150,6 +150,7 @@ export function TableSort({ data }: TableSortProps) {
         withColumnBorders
         striped
         records={sortedAndFilteredData2}
+        minHeight={sortedAndFilteredData2.length === 0 ? 200 : undefined}
         columns={[
           {
             accessor: "id",

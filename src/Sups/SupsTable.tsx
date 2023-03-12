@@ -38,6 +38,7 @@ export function SupTable({ data }: SupTableProps) {
         withColumnBorders
         striped
         records={records}
+        minHeight={records.length === 0 ? 200 : undefined}
         columns={[
           {
             accessor: "id",
