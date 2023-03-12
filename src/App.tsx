@@ -4,7 +4,7 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import { useColorScheme, useLocalStorage } from "@mantine/hooks";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import { DailyTimeline } from "./DailyTimeline";
 import Login from "./Login";
 import Root from "./Root";
@@ -18,7 +18,7 @@ import Todo from "./Todos/Todo";
 import { todoLoader } from "./Todos/todoLoader";
 import Todos from "./Todos/Todos";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/login",
     element: <Login />,
