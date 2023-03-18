@@ -16,7 +16,7 @@ import Sups from "./Sups/SupsTable";
 import CreateOrEditTodo from "./Todos/CreateOrEditTodo";
 import Todo from "./Todos/Todo";
 import { todoLoader } from "./Todos/todoLoader";
-import Todos from "./Todos/Todos";
+import { Todos } from "./Todos/Todos";
 
 const router = createHashRouter([
   {

@@ -32,10 +32,6 @@ const hashStrToNum = (s: string) => {
 
 type RowData = TodoItem;
 
-interface TableSortProps {
-  data: RowData[];
-}
-
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
@@ -55,7 +51,6 @@ function sortData(
     return filterData(data, payload.search);
   }
 
-  // // TODO: what's up with TS here?
   return filterData(
     [...data].sort((a, b) => {
       if (!a || !a[sortBy]) return 0;
@@ -73,7 +68,28 @@ function sortData(
   );
 }
 
-export function TableSort({ data }: TableSortProps) {
+export function Todos() {
+  // TODO: this isn't re-rendering when I update a todo by clicking a checkbox
+  const data = useLiveQuery(() =>
+    db.todos.orderBy("created_at").reverse().toArray()
+  );
+
+  const [search, setSearch] = useState("");
+  const [sortBy] = useState<keyof RowData | null>(null);
+  const [filterByTag, setFilterByTag] = useState("");
+  const [reverseSortDirection] = useState(false);
+  const [hideCompletedTodos, setHideCompletedTodos] = useState(true);
+
+  if (!data) {
+    return null;
+  }
+
+  const sortedData = sortData(data, {
+    sortBy,
+    reversed: reverseSortDirection,
+    search,
+  });
+
   const uniqTags = _.chain(data)
     .map((todo) => todo.tags)
     .concat()
@@ -89,21 +105,6 @@ export function TableSort({ data }: TableSortProps) {
     const variant = [5, 6, 7, 8, 9][h % 5];
     tagToColor[tag] = `${c}.${variant}`;
   });
-
-  const [search, setSearch] = useState("");
-  const [sortedData, setSortedData] = useState(data);
-  const [sortBy] = useState<keyof RowData | null>(null);
-  const [filterByTag, setFilterByTag] = useState("");
-  const [reverseSortDirection] = useState(false);
-  const [hideCompletedTodos, setHideCompletedTodos] = useState(true);
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setSearch(value);
-    setSortedData(
-      sortData(data, { sortBy, reversed: reverseSortDirection, search: value })
-    );
-  };
 
   const sortedAndFilteredData = filterByTag
     ? _.filter(sortedData, (x) => x.tags.includes(filterByTag))
@@ -121,7 +122,10 @@ export function TableSort({ data }: TableSortProps) {
           mb="md"
           icon={<IconSearch size={14} stroke={1.5} />}
           value={search}
-          onChange={handleSearchChange}
+          onChange={(event) => {
+            const { value } = event.currentTarget;
+            setSearch(value);
+          }}
         />
         <Group>
           <Select
@@ -193,16 +197,4 @@ export function TableSort({ data }: TableSortProps) {
       />
     </ScrollArea>
   );
-}
-
-export default function History() {
-  // TODO: this isn't re-rendering when I update a todo by clicking a checkbox
-  const results = useLiveQuery(() =>
-    db.todos.orderBy("created_at").reverse().toArray()
-  );
-  if (!results) {
-    return null;
-  }
-
-  return <TableSort data={results} />;
 }
