@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
-import { DataTable } from "mantine-datatable";
+import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { colors } from "../colors";
 import { db, TodoItem } from "../db";
 
@@ -32,39 +32,12 @@ const hashStrToNum = (s: string) => {
 
 type RowData = TodoItem;
 
-function filterData(data: RowData[], search: string) {
+function filterBySearchInput(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
     keys(data[0]).some((key) =>
       item[key]?.toString().toLowerCase().includes(query)
     )
-  );
-}
-
-function sortData(
-  data: RowData[],
-  payload: { sortBy: keyof RowData | null; reversed: boolean; search: string }
-) {
-  const { sortBy } = payload;
-
-  if (!sortBy) {
-    return filterData(data, payload.search);
-  }
-
-  return filterData(
-    [...data].sort((a, b) => {
-      if (!a || !a[sortBy]) return 0;
-      if (!b || !b[sortBy]) return 0;
-      const aStr = (a[sortBy] || "").toString();
-      const bStr = (b[sortBy] || "").toString();
-
-      if (payload.reversed) {
-        return bStr.localeCompare(aStr);
-      }
-
-      return aStr.localeCompare(bStr);
-    }),
-    payload.search
   );
 }
 
@@ -74,22 +47,19 @@ export function Todos() {
     db.todos.orderBy("created_at").reverse().toArray()
   );
 
+  const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
+    columnAccessor: "created_at",
+    direction: "desc",
+  });
   const [search, setSearch] = useState("");
-  const [sortBy] = useState<keyof RowData | null>(null);
   const [filterByTag, setFilterByTag] = useState("");
-  const [reverseSortDirection] = useState(false);
   const [hideCompletedTodos, setHideCompletedTodos] = useState(true);
 
   if (!data) {
     return null;
   }
 
-  const sortedData = sortData(data, {
-    sortBy,
-    reversed: reverseSortDirection,
-    search,
-  });
-
+  // Setup tags
   const uniqTags = _.chain(data)
     .map((todo) => todo.tags)
     .concat()
@@ -106,9 +76,19 @@ export function Todos() {
     tagToColor[tag] = `${c}.${variant}`;
   });
 
+  // Sort data
+  const sortedData = _.orderBy(
+    data,
+    sortStatus.columnAccessor,
+    sortStatus.direction
+  );
+
+  // Filter data
+  const searchFiltered = filterBySearchInput(sortedData, search);
+
   const sortedAndFilteredData = filterByTag
     ? _.filter(sortedData, (x) => x.tags.includes(filterByTag))
-    : sortedData;
+    : searchFiltered;
 
   const sortedAndFilteredData2 = sortedAndFilteredData.filter((todo) =>
     hideCompletedTodos ? !todo.isComplete : true
@@ -155,15 +135,19 @@ export function Todos() {
         striped
         records={sortedAndFilteredData2}
         minHeight={sortedAndFilteredData2.length === 0 ? 200 : undefined}
+        sortStatus={sortStatus}
+        onSortStatusChange={setSortStatus}
         columns={[
           {
             accessor: "id",
             render: (record) => {
               return <NavLink to={`/todos/${record.id}`}>{record.id}</NavLink>;
             },
+            sortable: true,
           },
           {
             accessor: "isComplete",
+            sortable: true,
             render: (record) => {
               return (
                 <Checkbox
@@ -177,8 +161,8 @@ export function Todos() {
               );
             },
           },
-          { accessor: "summary" },
-          { accessor: "notes" },
+          { accessor: "summary", sortable: true },
+          { accessor: "notes", sortable: true },
           {
             accessor: "tags",
             render: (record) => {
@@ -191,6 +175,13 @@ export function Todos() {
                   </Fragment>
                 );
               });
+            },
+          },
+          {
+            accessor: "created_at",
+            sortable: true,
+            render: (record) => {
+              return record.created_at.toISOString();
             },
           },
         ]}
