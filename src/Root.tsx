@@ -22,9 +22,21 @@ export default function Root() {
       icon: <IconDashboard size={18} />,
     },
     {
+      title: "View Todos",
+      description: "View all todos",
+      onTrigger: () => navigate("/todos"),
+      icon: <IconDashboard size={18} />,
+    },
+    {
       title: "Add Sup",
       description: "Add a new sup",
       onTrigger: () => navigate("/sups/create"),
+      icon: <IconDashboard size={18} />,
+    },
+    {
+      title: "View Sups",
+      description: "View all sups",
+      onTrigger: () => navigate("/sups"),
       icon: <IconDashboard size={18} />,
     },
   ];
