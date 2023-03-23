@@ -1,5 +1,4 @@
 import {
-  Anchor,
   Box,
   Breadcrumbs,
   Button,
@@ -24,9 +23,9 @@ export default function Todo() {
     { title: "Todos", href: "/todos" },
     { title: summary, href: "#" },
   ].map((item, index) => (
-    <Anchor href={item.href} key={index}>
+    <NavLink to={item.href} key={index}>
       {item.title}
-    </Anchor>
+    </NavLink>
   ));
 
   return (

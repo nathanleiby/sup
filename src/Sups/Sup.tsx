@@ -1,4 +1,4 @@
-import { Anchor, Breadcrumbs, Button, Text } from "@mantine/core";
+import { Breadcrumbs, Button, Text } from "@mantine/core";
 import { NavLink, useLoaderData } from "react-router-dom";
 import SupBox from "./SupCard";
 import { supLoaderData } from "./supLoader";
@@ -13,9 +13,9 @@ export default function Sup() {
     { title: "Sups", href: "/sups" },
     { title: entry.summary, href: "#" },
   ].map((item, index) => (
-    <Anchor href={item.href} key={index}>
+    <NavLink to={item.href} key={index}>
       {item.title}
-    </Anchor>
+    </NavLink>
   ));
 
   return (
