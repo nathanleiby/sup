@@ -5,11 +5,13 @@ import {
   Header,
   MediaQuery,
   Tabs,
+  Text,
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconRipple } from "@tabler/icons-react";
 import { NavLink } from "react-router-dom";
+import { db } from "./db";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -109,7 +111,7 @@ interface HeaderTabsProps {
 }
 
 export function HeaderTabsColored({ user }: HeaderTabsProps) {
-  const { classes, theme, cx } = useStyles();
+  const { theme } = useStyles();
   const [opened, { toggle }] = useDisclosure(false);
 
   return (
@@ -134,6 +136,8 @@ export function HeaderTabsColored({ user }: HeaderTabsProps) {
         <Title>
           <IconRipple /> Sup
         </Title>
+        {/* TODO: someday, use icons */}
+        <Text ml="lg">{db.cloud.syncState.value.phase}</Text>
         <Container>
           <Tabs>
             <Tabs.List>
