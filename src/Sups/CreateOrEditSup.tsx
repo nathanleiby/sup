@@ -7,12 +7,22 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
-import { hasLength, useForm } from "@mantine/form";
+import { useForm, zodResolver } from "@mantine/form";
 import { useFocusTrap } from "@mantine/hooks";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { z } from "zod";
 import { db } from "../db";
 import { supLoaderData } from "./supLoader";
+
+const schema = z.object({
+  // todo_id is undefined to start, but set to null when the select box is cleared
+  todo_id: z.string().nullable().optional(),
+  summary: z
+    .string()
+    .min(3, { message: "Summary must be at least 3 characters long" }),
+  notes: z.string(),
+});
 
 export default function CreateOrEditSup() {
   const location = useLocation();
@@ -32,12 +42,7 @@ export default function CreateOrEditSup() {
 
   const form = useForm({
     initialValues,
-    validate: {
-      summary: hasLength(
-        { min: 3 },
-        "Summary must be at least 3 characters long"
-      ),
-    },
+    validate: zodResolver(schema),
   });
 
   const navigate = useNavigate();
@@ -71,7 +76,7 @@ export default function CreateOrEditSup() {
                 notes,
                 todo_id,
               });
-              navigate(`/sups/${entry.id}`);
+              navigate(`/sups/${id}`);
             } else {
               const id = await db.sups.add({
                 summary,
