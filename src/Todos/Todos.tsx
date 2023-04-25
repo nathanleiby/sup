@@ -15,9 +15,10 @@ import {
   TextInput,
 } from "@mantine/core";
 import { keys } from "@mantine/utils";
-import { IconSearch, IconStar, IconStarFilled } from "@tabler/icons-react";
+import { IconSearch } from "@tabler/icons-react";
 import { Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { CheckboxStarIcon } from "./CheckboxStarIcon";
 
 const hashStrToNum = (s: string) => {
   var hash = 0,
@@ -139,13 +140,6 @@ export function Todos() {
         onSortStatusChange={setSortStatus}
         columns={[
           {
-            accessor: "id",
-            render: (record) => {
-              return <NavLink to={`/todos/${record.id}`}>{record.id}</NavLink>;
-            },
-            sortable: true,
-          },
-          {
             accessor: "isComplete",
             sortable: true,
             render: (record) => {
@@ -168,6 +162,7 @@ export function Todos() {
               return (
                 <Group>
                   <Checkbox
+                    icon={CheckboxStarIcon}
                     checked={record.isStarred}
                     onChange={async (e) => {
                       await db.todos.update(record.id!, {
@@ -175,13 +170,21 @@ export function Todos() {
                       });
                     }}
                   />
-                  {record.isStarred ? <IconStarFilled /> : <IconStar />}
                 </Group>
               );
             },
           },
-          { accessor: "summary", sortable: true },
-          { accessor: "notes", sortable: true },
+          {
+            accessor: "summary",
+            render: (record) => {
+              return (
+                <NavLink to={`/todos/${record.id}`}>{record.summary}</NavLink>
+              );
+            },
+            sortable: true,
+            ellipsis: true,
+          },
+          { accessor: "notes", sortable: true, ellipsis: true },
           {
             accessor: "tags",
             render: (record) => {
@@ -202,6 +205,7 @@ export function Todos() {
             render: (record) => {
               return record.created_at.toISOString();
             },
+            ellipsis: true,
           },
         ]}
       />
