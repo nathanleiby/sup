@@ -26,6 +26,7 @@ export default function CreateOrEditTodo() {
         notes: "",
         tags: [],
         isComplete: false,
+        isStarred: false,
       };
 
   const form = useForm({
@@ -68,7 +69,7 @@ export default function CreateOrEditTodo() {
         maw={400}
         mx="auto"
         onSubmit={form.onSubmit((values) => {
-          const { summary, notes, tags, isComplete } = values;
+          const { summary, notes, tags, isComplete, isStarred } = values;
           const asyncWrapper = async () => {
             if (todo) {
               const id = await db.todos.update(todo.id!, {
@@ -76,6 +77,7 @@ export default function CreateOrEditTodo() {
                 notes,
                 tags,
                 isComplete,
+                isStarred,
               });
               navigate(`/todos/${todo.id}`);
             } else {
@@ -85,6 +87,7 @@ export default function CreateOrEditTodo() {
                 created_at: new Date(),
                 tags,
                 isComplete: false,
+                isStarred: false,
               });
               navigate(`/todos/${id}`);
             }
@@ -124,6 +127,13 @@ export default function CreateOrEditTodo() {
             label="Is Complete"
             mt="md"
             {...form.getInputProps("isComplete")}
+          />
+        )}
+        {todo && (
+          <Checkbox
+            label="Is Starred"
+            mt="md"
+            {...form.getInputProps("isStarred")}
           />
         )}
 

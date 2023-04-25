@@ -17,6 +17,7 @@ export interface TodoItem {
   notes: string;
   tags: string[];
   isComplete: boolean;
+  isStarred: boolean;
 }
 
 export class MySubClassedDexie extends Dexie {
@@ -26,9 +27,9 @@ export class MySubClassedDexie extends Dexie {
   constructor() {
     super("supDatabase", { addons: [dexieCloud] });
 
-    this.version(5).stores({
+    this.version(6).stores({
       sups: "@id, timestamp, summary, notes, todo_id",
-      todos: "@id, created_at, summary, notes, tags, isComplete",
+      todos: "@id, created_at, summary, notes, tags, isComplete, isStarred",
     });
 
     this.cloud.configure({

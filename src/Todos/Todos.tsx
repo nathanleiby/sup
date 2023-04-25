@@ -2,7 +2,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { colors } from "../colors";
-import { db, TodoItem } from "../db";
+import { TodoItem, db } from "../db";
 
 import {
   Badge,
@@ -15,7 +15,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { keys } from "@mantine/utils";
-import { IconSearch } from "@tabler/icons-react";
+import { IconSearch, IconStar, IconStarFilled } from "@tabler/icons-react";
 import { Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -158,6 +158,25 @@ export function Todos() {
                     });
                   }}
                 />
+              );
+            },
+          },
+          {
+            accessor: "isStarred",
+            sortable: true,
+            render: (record) => {
+              return (
+                <Group>
+                  <Checkbox
+                    checked={record.isStarred}
+                    onChange={async (e) => {
+                      await db.todos.update(record.id!, {
+                        isStarred: e.target.checked,
+                      });
+                    }}
+                  />
+                  {record.isStarred ? <IconStarFilled /> : <IconStar />}
+                </Group>
               );
             },
           },
