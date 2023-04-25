@@ -55,6 +55,7 @@ export function Todos() {
   const [search, setSearch] = useState("");
   const [filterByTag, setFilterByTag] = useState("");
   const [hideCompletedTodos, setHideCompletedTodos] = useState(true);
+  const [isDetailMode, setIsDetailMode] = useState(false);
 
   if (!data) {
     return null;
@@ -125,6 +126,12 @@ export function Todos() {
             checked={hideCompletedTodos}
             onChange={(v) => setHideCompletedTodos(v.currentTarget.checked)}
           />
+          <Switch
+            mb="md"
+            label="Show all details"
+            checked={isDetailMode}
+            onChange={(v) => setIsDetailMode(v.currentTarget.checked)}
+          />
         </Group>
         <NavLink to="/todos/create">
           <Button mb="md">Add Todo (+)</Button>
@@ -184,7 +191,6 @@ export function Todos() {
             sortable: true,
             ellipsis: true,
           },
-          { accessor: "notes", sortable: true, ellipsis: true },
           {
             accessor: "tags",
             render: (record) => {
@@ -200,12 +206,19 @@ export function Todos() {
             },
           },
           {
+            accessor: "notes",
+            sortable: true,
+            ellipsis: true,
+            hidden: !isDetailMode,
+          },
+          {
             accessor: "created_at",
             sortable: true,
             render: (record) => {
               return record.created_at.toISOString();
             },
             ellipsis: true,
+            hidden: !isDetailMode,
           },
         ]}
       />
