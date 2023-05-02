@@ -8,6 +8,7 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
 import { hasLength, useForm } from "@mantine/form";
 import { useFocusTrap } from "@mantine/hooks";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -15,6 +16,7 @@ import _ from "lodash";
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { db, TodoItem } from "../db";
+import { CheckboxStarIcon } from "./CheckboxStarIcon";
 import { todoLoaderData } from "./todoLoader";
 
 export default function CreateOrEditTodo() {
@@ -27,6 +29,7 @@ export default function CreateOrEditTodo() {
         tags: [],
         isComplete: false,
         isStarred: false,
+        dueDate: undefined,
       };
 
   const form = useForm({
@@ -69,7 +72,8 @@ export default function CreateOrEditTodo() {
         maw={400}
         mx="auto"
         onSubmit={form.onSubmit((values) => {
-          const { summary, notes, tags, isComplete, isStarred } = values;
+          const { summary, notes, tags, isComplete, isStarred, dueDate } =
+            values;
           const asyncWrapper = async () => {
             if (todo) {
               const id = await db.todos.update(todo.id!, {
@@ -78,6 +82,7 @@ export default function CreateOrEditTodo() {
                 tags,
                 isComplete,
                 isStarred,
+                dueDate,
               });
               navigate(`/todos/${todo.id}`);
             } else {
@@ -87,7 +92,8 @@ export default function CreateOrEditTodo() {
                 created_at: new Date(),
                 tags,
                 isComplete: false,
-                isStarred: false,
+                isStarred,
+                dueDate,
               });
               navigate(`/todos/${id}`);
             }
@@ -122,6 +128,19 @@ export default function CreateOrEditTodo() {
           }}
           {...form.getInputProps("tags")}
         />
+        <DatePicker
+          label="Due Date"
+          mt="md"
+          {...form.getInputProps("dueDate")}
+        />
+        <Group>
+          <Checkbox
+            label="Is Starred"
+            mt="md"
+            icon={CheckboxStarIcon}
+            {...form.getInputProps("isStarred")}
+          />
+        </Group>
         {todo && (
           <Checkbox
             label="Is Complete"
@@ -129,14 +148,6 @@ export default function CreateOrEditTodo() {
             {...form.getInputProps("isComplete")}
           />
         )}
-        {todo && (
-          <Checkbox
-            label="Is Starred"
-            mt="md"
-            {...form.getInputProps("isStarred")}
-          />
-        )}
-
         <Group position="right" mt="md">
           <Button type="submit">Submit</Button>
         </Group>

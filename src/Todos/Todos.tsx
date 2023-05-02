@@ -16,6 +16,7 @@ import {
 } from "@mantine/core";
 import { keys } from "@mantine/utils";
 import { IconSearch } from "@tabler/icons-react";
+import { format } from "date-fns";
 import { Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { CheckboxStarIcon } from "./CheckboxStarIcon";
@@ -203,6 +204,16 @@ export function Todos() {
                   </Fragment>
                 );
               });
+            },
+          },
+          {
+            accessor: "dueDate",
+            sortable: true,
+            ellipsis: true,
+            hidden: !isDetailMode,
+            render: (record) => {
+              if (!record.dueDate) return;
+              return format(record.dueDate, "yyy-MM-dd");
             },
           },
           {

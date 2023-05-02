@@ -3,13 +3,13 @@ import {
   Breadcrumbs,
   Button,
   Checkbox,
-  Group,
   Text,
   Textarea,
   TextInput,
 } from "@mantine/core";
-import { IconStar, IconStarFilled } from "@tabler/icons-react";
+import { DatePicker } from "@mantine/dates";
 import { NavLink, useLoaderData } from "react-router-dom";
+import { CheckboxStarIcon } from "./CheckboxStarIcon";
 import { todoLoaderData } from "./todoLoader";
 import { TodoTimeline } from "./TodoTimeline";
 
@@ -19,7 +19,7 @@ export default function Todo() {
     return <>no todo found</>;
   }
 
-  const { summary, notes, tags, isComplete, isStarred } = todo;
+  const { summary, notes, tags, isComplete, isStarred, dueDate } = todo;
 
   const items = [
     { title: "Todos", href: "/todos" },
@@ -69,11 +69,15 @@ export default function Todo() {
           value={tags}
           disabled
         />
+        <DatePicker label="Due Date" mt="md" value={dueDate} disabled />
+        <Checkbox
+          label="Is Starred"
+          mt="md"
+          checked={isStarred}
+          icon={CheckboxStarIcon}
+          disabled
+        />
         <Checkbox label="Is Complete" mt="md" checked={isComplete} disabled />
-        <Group>
-          <Checkbox label="Is Starred" mt="md" checked={isStarred} disabled />{" "}
-          {isStarred ? <IconStarFilled /> : <IconStar />}
-        </Group>
       </Box>
 
       <Box>
