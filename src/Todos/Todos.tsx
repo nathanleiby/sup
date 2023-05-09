@@ -9,8 +9,8 @@ import {
   Button,
   Checkbox,
   Group,
+  MultiSelect,
   ScrollArea,
-  Select,
   Switch,
   TextInput,
 } from "@mantine/core";
@@ -54,7 +54,7 @@ export function Todos() {
     direction: "desc",
   });
   const [search, setSearch] = useState("");
-  const [filterByTag, setFilterByTag] = useState("");
+  const [filterByTags, setFilterByTags] = useState<string[]>([]);
   const [hideCompletedTodos, setHideCompletedTodos] = useState(true);
   const [isDetailMode, setIsDetailMode] = useState(false);
 
@@ -89,8 +89,10 @@ export function Todos() {
   // Filter data
   const searchFiltered = filterBySearchInput(sortedData, search);
 
-  const sortedAndFilteredData = filterByTag
-    ? _.filter(sortedData, (x) => x.tags.includes(filterByTag))
+  const sortedAndFilteredData = filterByTags
+    ? _.filter(sortedData, (x) =>
+        _.every(_.map(filterByTags, (t) => x.tags.includes(t)))
+      )
     : searchFiltered;
 
   const sortedAndFilteredData2 = sortedAndFilteredData.filter((todo) =>
@@ -111,12 +113,12 @@ export function Todos() {
           }}
         />
         <Group>
-          <Select
+          <MultiSelect
             placeholder="Filter by tag"
             mb="md"
             icon={<IconSearch size={14} stroke={1.5} />}
-            value={filterByTag}
-            onChange={(v) => setFilterByTag(v || "")}
+            value={filterByTags}
+            onChange={(v) => setFilterByTags(v)}
             data={uniqTags}
             searchable
             clearable
