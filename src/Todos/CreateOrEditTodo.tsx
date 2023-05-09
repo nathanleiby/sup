@@ -8,7 +8,7 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import { hasLength, useForm } from "@mantine/form";
 import { useFocusTrap } from "@mantine/hooks";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -128,7 +128,7 @@ export default function CreateOrEditTodo() {
           }}
           {...form.getInputProps("tags")}
         />
-        <DatePicker
+        <DatePickerInput
           label="Due Date"
           mt="md"
           {...form.getInputProps("dueDate")}

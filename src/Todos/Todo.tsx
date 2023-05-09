@@ -7,7 +7,7 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import { NavLink, useLoaderData } from "react-router-dom";
 import { CheckboxStarIcon } from "./CheckboxStarIcon";
 import { todoLoaderData } from "./todoLoader";
@@ -69,7 +69,7 @@ export default function Todo() {
           value={tags}
           disabled
         />
-        <DatePicker label="Due Date" mt="md" value={dueDate} disabled />
+        <DatePickerInput label="Due Date" mt="md" value={dueDate} disabled />
         <Checkbox
           label="Is Starred"
           mt="md"

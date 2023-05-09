@@ -1,7 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
-import { colors } from "../colors";
 import { TodoItem, db } from "../db";
 
 import {
@@ -20,17 +19,7 @@ import { format } from "date-fns";
 import { Fragment, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { CheckboxStarIcon } from "./CheckboxStarIcon";
-
-const hashStrToNum = (s: string) => {
-  var hash = 0,
-    i = 0,
-    len = s.length;
-  while (i < len) {
-    hash = ((hash << 5) - hash + s.charCodeAt(i++)) << 0;
-  }
-  const positive = hash + 2147483647 + 1;
-  return positive;
-};
+import { TagSelectItem, Value as TagValue, tagToColor } from "./Value";
 
 type RowData = TodoItem;
 
@@ -69,15 +58,6 @@ export function Todos() {
     .flatten()
     .uniq()
     .value();
-
-  const tagToColor: { [tag: string]: string } = {};
-
-  uniqTags.forEach((tag) => {
-    const h = hashStrToNum(tag) + 1;
-    const c = colors[h % colors.length]!;
-    const variant = [5, 6, 7, 8, 9][h % 5];
-    tagToColor[tag] = `${c}.${variant}`;
-  });
 
   // Sort data
   const sortedData = _.orderBy(
@@ -118,6 +98,8 @@ export function Todos() {
             mb="md"
             icon={<IconSearch size={14} stroke={1.5} />}
             value={filterByTags}
+            valueComponent={TagValue}
+            itemComponent={TagSelectItem}
             onChange={(v) => setFilterByTags(v)}
             data={uniqTags}
             searchable
@@ -202,7 +184,7 @@ export function Todos() {
                   <Fragment key={idx}>
                     <Badge
                       key={idx}
-                      color={tagToColor[t]}
+                      color={tagToColor(t)}
                       onClick={() => {
                         console.log("click");
                         if (_.includes(filterByTags, t)) {
