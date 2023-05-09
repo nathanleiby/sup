@@ -200,7 +200,18 @@ export function Todos() {
               return record.tags.map((t, idx) => {
                 return (
                   <Fragment key={idx}>
-                    <Badge key={idx} color={tagToColor[t]}>
+                    <Badge
+                      key={idx}
+                      color={tagToColor[t]}
+                      onClick={() => {
+                        console.log("click");
+                        if (_.includes(filterByTags, t)) {
+                          setFilterByTags(_.without(filterByTags, t));
+                        } else {
+                          setFilterByTags(_.concat(filterByTags, t));
+                        }
+                      }}
+                    >
                       {t}
                     </Badge>{" "}
                   </Fragment>
