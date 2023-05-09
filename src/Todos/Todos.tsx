@@ -70,7 +70,7 @@ export function Todos() {
   const searchFiltered = filterBySearchInput(sortedData, search);
 
   const sortedAndFilteredData = filterByTags
-    ? _.filter(sortedData, (x) =>
+    ? _.filter(searchFiltered, (x) =>
         _.every(_.map(filterByTags, (t) => x.tags.includes(t)))
       )
     : searchFiltered;
