@@ -39,7 +39,7 @@ export const TagSelectItem = forwardRef<HTMLDivElement, ItemProps>(
   }
 );
 
-export function Value({
+export function TagValue({
   value,
   label,
   onRemove,

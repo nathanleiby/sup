@@ -1,5 +1,6 @@
 ## nice-to-have:
 
+- [ ] switch to vite. get hot reloading
 - [ ] good UX on phone too
 - [ ] calendar view
   - in app

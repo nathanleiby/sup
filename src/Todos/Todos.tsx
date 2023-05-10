@@ -1,7 +1,9 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
-import { DataTable, DataTableSortStatus } from "mantine-datatable";
 import { TodoItem, db } from "../db";
+
+import type { MRT_ColumnDef } from "mantine-react-table";
+import { MantineReactTable } from "mantine-react-table";
 
 import {
   Badge,
@@ -9,43 +11,129 @@ import {
   Checkbox,
   Group,
   MultiSelect,
-  ScrollArea,
+  Stack,
   Switch,
-  TextInput,
 } from "@mantine/core";
-import { keys } from "@mantine/utils";
 import { IconSearch } from "@tabler/icons-react";
-import { format } from "date-fns";
-import { Fragment, useState } from "react";
+import { format, formatDistance } from "date-fns";
+import { Fragment, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { CheckboxStarIcon } from "./CheckboxStarIcon";
-import { TagSelectItem, Value as TagValue, tagToColor } from "./Value";
-
-type RowData = TodoItem;
-
-function filterBySearchInput(data: RowData[], search: string) {
-  const query = search.toLowerCase().trim();
-  return data.filter((item) =>
-    keys(data[0]).some((key) =>
-      item[key]?.toString().toLowerCase().includes(query)
-    )
-  );
-}
+import { TagSelectItem, TagValue, tagToColor } from "./Value";
 
 export function Todos() {
-  // TODO: this isn't re-rendering when I update a todo by clicking a checkbox
   const data = useLiveQuery(() =>
     db.todos.orderBy("created_at").reverse().toArray()
   );
 
-  const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
-    columnAccessor: "created_at",
-    direction: "desc",
-  });
-  const [search, setSearch] = useState("");
   const [filterByTags, setFilterByTags] = useState<string[]>([]);
-  const [hideCompletedTodos, setHideCompletedTodos] = useState(true);
-  const [isDetailMode, setIsDetailMode] = useState(false);
+  const [hideCompletedTodos, setHideCompletedTodos] = useState<boolean>(true);
+
+  const columns = useMemo<MRT_ColumnDef<TodoItem>[]>(
+    () => [
+      {
+        header: "Is Complete",
+        enableSorting: true,
+        size: 40,
+        maxSize: 100,
+        accessorFn: (record) => {
+          return (
+            <Checkbox
+              checked={record.isComplete}
+              onChange={async (e) => {
+                await db.todos.update(record.id!, {
+                  isComplete: e.target.checked,
+                });
+              }}
+            />
+          );
+        },
+      },
+      {
+        header: "Is Starred",
+        enableSorting: true,
+        size: 40,
+        maxSize: 100,
+        accessorFn: (record) => {
+          return (
+            <Group>
+              <Checkbox
+                icon={CheckboxStarIcon}
+                checked={record.isStarred}
+                onChange={async (e) => {
+                  await db.todos.update(record.id!, {
+                    isStarred: e.target.checked,
+                  });
+                }}
+              />
+            </Group>
+          );
+        },
+      },
+      {
+        header: "Summary",
+        accessorKey: "summary",
+        accessorFn: (record) => {
+          return <NavLink to={`/todos/${record.id}`}>{record.summary}</NavLink>;
+        },
+        enableSorting: true,
+        // ellipsis: true,
+      },
+      {
+        header: "Tags",
+        accessorKey: "tags",
+        // TODO: Explore filtering by tags in arr
+        // https://tanstack.com/table/v8/docs/api/features/filters?from=reactTableV7&original=https%3A%2F%2Freact-table-v7.tanstack.com%2Fdocs%2Fapi%2FuseGlobalFilter
+        Cell: ({ cell }) => {
+          const tags = cell.getValue<string[]>();
+          return tags.map((t, idx) => {
+            return (
+              <Fragment key={idx}>
+                <Badge
+                  key={idx}
+                  color={tagToColor(t)}
+                  onClick={() => {
+                    if (_.includes(filterByTags, t)) {
+                      setFilterByTags(_.without(filterByTags, t));
+                    } else {
+                      setFilterByTags(_.concat(filterByTags, t));
+                    }
+                  }}
+                >
+                  {t}
+                </Badge>{" "}
+              </Fragment>
+            );
+          });
+        },
+      },
+      {
+        header: "Due Date",
+        accessorKey: "dueDate",
+        Cell: ({ cell }) => {
+          const value = cell.getValue<Date | undefined>();
+          if (!value) return;
+          return format(value, "yyyy-MM-dd");
+        },
+      },
+      {
+        header: "Notes",
+        accessorKey: "notes",
+        enableSorting: true,
+      },
+      {
+        header: "Created At",
+        accessorKey: "created_at",
+        enableSorting: true,
+        accessorFn: (record) => {
+          return formatDistance(record.created_at, new Date(), {
+            addSuffix: true,
+          });
+        },
+      },
+    ],
+    [filterByTags]
+  );
 
   if (!data) {
     return null;
@@ -59,40 +147,20 @@ export function Todos() {
     .uniq()
     .value();
 
-  // Sort data
-  const sortedData = _.orderBy(
-    data,
-    sortStatus.columnAccessor,
-    sortStatus.direction
-  );
-
-  // Filter data
-  const searchFiltered = filterBySearchInput(sortedData, search);
-
   const sortedAndFilteredData = filterByTags
-    ? _.filter(searchFiltered, (x) =>
+    ? _.filter(data, (x) =>
         _.every(_.map(filterByTags, (t) => x.tags.includes(t)))
       )
-    : searchFiltered;
+    : data;
 
   const sortedAndFilteredData2 = sortedAndFilteredData.filter((todo) =>
     hideCompletedTodos ? !todo.isComplete : true
   );
 
   return (
-    <ScrollArea>
-      <div>
-        <TextInput
-          placeholder="Search by any field"
-          mb="md"
-          icon={<IconSearch size={14} stroke={1.5} />}
-          value={search}
-          onChange={(event) => {
-            const { value } = event.currentTarget;
-            setSearch(value);
-          }}
-        />
-        <Group>
+    <Stack>
+      <Group grow>
+        <Group position="left">
           <MultiSelect
             placeholder="Filter by tag"
             mb="md"
@@ -111,123 +179,25 @@ export function Todos() {
             checked={hideCompletedTodos}
             onChange={(v) => setHideCompletedTodos(v.currentTarget.checked)}
           />
-          <Switch
-            mb="md"
-            label="Show all details"
-            checked={isDetailMode}
-            onChange={(v) => setIsDetailMode(v.currentTarget.checked)}
-          />
         </Group>
-        <NavLink to="/todos/create">
-          <Button mb="md">Add Todo (+)</Button>
-        </NavLink>
-      </div>
-      <DataTable
-        withBorder
-        withColumnBorders
-        striped
-        records={sortedAndFilteredData2}
-        minHeight={sortedAndFilteredData2.length === 0 ? 200 : undefined}
-        sortStatus={sortStatus}
-        onSortStatusChange={setSortStatus}
-        columns={[
-          {
-            accessor: "isComplete",
-            sortable: true,
-            render: (record) => {
-              return (
-                <Checkbox
-                  checked={record.isComplete}
-                  onChange={async (e) => {
-                    await db.todos.update(record.id!, {
-                      isComplete: e.target.checked,
-                    });
-                  }}
-                />
-              );
-            },
-          },
-          {
-            accessor: "isStarred",
-            sortable: true,
-            render: (record) => {
-              return (
-                <Group>
-                  <Checkbox
-                    icon={CheckboxStarIcon}
-                    checked={record.isStarred}
-                    onChange={async (e) => {
-                      await db.todos.update(record.id!, {
-                        isStarred: e.target.checked,
-                      });
-                    }}
-                  />
-                </Group>
-              );
-            },
-          },
-          {
-            accessor: "summary",
-            render: (record) => {
-              return (
-                <NavLink to={`/todos/${record.id}`}>{record.summary}</NavLink>
-              );
-            },
-            sortable: true,
-            ellipsis: true,
-          },
-          {
-            accessor: "tags",
-            render: (record) => {
-              return record.tags.map((t, idx) => {
-                return (
-                  <Fragment key={idx}>
-                    <Badge
-                      key={idx}
-                      color={tagToColor(t)}
-                      onClick={() => {
-                        console.log("click");
-                        if (_.includes(filterByTags, t)) {
-                          setFilterByTags(_.without(filterByTags, t));
-                        } else {
-                          setFilterByTags(_.concat(filterByTags, t));
-                        }
-                      }}
-                    >
-                      {t}
-                    </Badge>{" "}
-                  </Fragment>
-                );
-              });
-            },
-          },
-          {
-            accessor: "dueDate",
-            sortable: true,
-            ellipsis: true,
-            hidden: !isDetailMode,
-            render: (record) => {
-              if (!record.dueDate) return;
-              return format(record.dueDate, "yyy-MM-dd");
-            },
-          },
-          {
-            accessor: "notes",
-            sortable: true,
-            ellipsis: true,
-            hidden: !isDetailMode,
-          },
-          {
-            accessor: "created_at",
-            sortable: true,
-            render: (record) => {
-              return record.created_at.toISOString();
-            },
-            ellipsis: true,
-            hidden: !isDetailMode,
-          },
-        ]}
+        <Group position="right">
+          <NavLink to="/todos/create">
+            <Button mb="md">Add Todo (+)</Button>
+          </NavLink>
+        </Group>
+      </Group>
+
+      <MantineReactTable
+        columns={columns}
+        data={sortedAndFilteredData2}
+        enableColumnActions={false}
+        // enableColumnResizing
+        initialState={{ density: "xs" }}
+        enableHiding
+        enableDensityToggle={false}
+        enableFullScreenToggle={false}
+        enablePagination={false}
       />
-    </ScrollArea>
+    </Stack>
   );
 }
