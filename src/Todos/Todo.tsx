@@ -3,6 +3,7 @@ import {
   Breadcrumbs,
   Button,
   Checkbox,
+  MultiSelect,
   Text,
   Textarea,
   TextInput,
@@ -12,6 +13,7 @@ import { NavLink, useLoaderData } from "react-router-dom";
 import { CheckboxStarIcon } from "./CheckboxStarIcon";
 import { todoLoaderData } from "./todoLoader";
 import { TodoTimeline } from "./TodoTimeline";
+import { TagSelectItem, TagValue } from "./Value";
 
 export default function Todo() {
   const { todo } = useLoaderData() as todoLoaderData;
@@ -62,11 +64,14 @@ export default function Todo() {
           value={notes}
           disabled
         />
-        <TextInput
+        <MultiSelect
+          value={tags}
+          data={tags}
           label="Tags"
           placeholder="Tags"
           mt="md"
-          value={tags}
+          valueComponent={TagValue}
+          itemComponent={TagSelectItem}
           disabled
         />
         <DatePickerInput label="Due Date" mt="md" value={dueDate} disabled />

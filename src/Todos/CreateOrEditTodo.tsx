@@ -18,6 +18,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import { db, TodoItem } from "../db";
 import { CheckboxStarIcon } from "./CheckboxStarIcon";
 import { todoLoaderData } from "./todoLoader";
+import { TagSelectItem, TagValue } from "./Value";
 
 export default function CreateOrEditTodo() {
   const { todo } = useLoaderData() as todoLoaderData;
@@ -118,6 +119,8 @@ export default function CreateOrEditTodo() {
           label="Tags"
           placeholder="Tags"
           mt="md"
+          valueComponent={TagValue}
+          itemComponent={TagSelectItem}
           searchable
           clearable
           creatable
