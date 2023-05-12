@@ -1,7 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, Entry } from "../db";
 
-import { Button, ScrollArea } from "@mantine/core";
+import { Button, Group, Stack } from "@mantine/core";
 import { formatRelative } from "date-fns";
 import { sortBy } from "lodash";
 import { DataTable, DataTableSortStatus } from "mantine-datatable";
@@ -27,12 +27,12 @@ export function SupTable({ data }: SupTableProps) {
   }, [sortStatus, data]);
 
   return (
-    <ScrollArea>
-      <div>
+    <Stack>
+      <Group position="right">
         <NavLink to="/sups/create">
-          <Button mb="md">Add Sup (+)</Button>
+          <Button>Add Sup (+)</Button>
         </NavLink>
-      </div>
+      </Group>
       <DataTable
         withBorder
         withColumnBorders
@@ -68,7 +68,7 @@ export function SupTable({ data }: SupTableProps) {
         sortStatus={sortStatus}
         onSortStatusChange={setSortStatus}
       />
-    </ScrollArea>
+    </Stack>
   );
 }
 

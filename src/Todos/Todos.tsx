@@ -163,7 +163,6 @@ export function Todos() {
         <Group position="left">
           <MultiSelect
             placeholder="Filter by tag"
-            mb="md"
             icon={<IconSearch size={14} stroke={1.5} />}
             value={filterByTags}
             valueComponent={TagValue}
@@ -174,7 +173,6 @@ export function Todos() {
             clearable
           />
           <Switch
-            mb="md"
             label="Hide completed todos"
             checked={hideCompletedTodos}
             onChange={(v) => setHideCompletedTodos(v.currentTarget.checked)}
@@ -182,7 +180,7 @@ export function Todos() {
         </Group>
         <Group position="right">
           <NavLink to="/todos/create">
-            <Button mb="md">Add Todo (+)</Button>
+            <Button>Add Todo (+)</Button>
           </NavLink>
         </Group>
       </Group>
