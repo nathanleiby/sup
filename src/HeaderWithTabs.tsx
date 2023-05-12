@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconRipple } from "@tabler/icons-react";
-import { NavLink } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { db } from "./db";
 import { FocusSupButton } from "./Sups/FocusSupButton";
 
@@ -115,6 +115,8 @@ interface HeaderTabsProps {
 export function HeaderWithTabs({ user }: HeaderTabsProps) {
   const { theme } = useStyles();
   const [opened, { toggle }] = useDisclosure(false);
+  const { tabValue } = useParams();
+  const navigate = useNavigate();
 
   return (
     <Header height={{ base: 50, md: 70 }} p="md">
@@ -142,20 +144,15 @@ export function HeaderWithTabs({ user }: HeaderTabsProps) {
         <Text ml="lg">{db.cloud.syncState.value.phase}</Text>
         <Container>
           <Group position="apart">
-            <Tabs>
+            <Tabs
+              value={tabValue}
+              onTabChange={(value) => navigate(`/${value}`)}
+            >
               <Tabs.List>
-                <NavLink to="/sups">
-                  <Tabs.Tab value="sups">Sups</Tabs.Tab>
-                </NavLink>
-                <NavLink to="/todos">
-                  <Tabs.Tab value="todos">Todos</Tabs.Tab>
-                </NavLink>
-                <NavLink to="/timeline">
-                  <Tabs.Tab value="timeline">Timeline</Tabs.Tab>
-                </NavLink>
-                <NavLink to="/settings">
-                  <Tabs.Tab value="settings">Settings</Tabs.Tab>
-                </NavLink>
+                <Tabs.Tab value="sups">Sups</Tabs.Tab>
+                <Tabs.Tab value="todos">Todos</Tabs.Tab>
+                <Tabs.Tab value="timeline">Timeline</Tabs.Tab>
+                <Tabs.Tab value="settings">Settings</Tabs.Tab>
               </Tabs.List>
             </Tabs>
             <FocusSupButton />
