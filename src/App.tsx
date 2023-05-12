@@ -4,19 +4,19 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import { useColorScheme, useLocalStorage } from "@mantine/hooks";
-import { createHashRouter, RouterProvider } from "react-router-dom";
+import { Navigate, RouterProvider, createHashRouter } from "react-router-dom";
 import { DailyTimeline } from "./DailyTimeline";
 import Login from "./Login";
 import Root from "./Root";
 import Settings from "./Settings";
 import CreateOrEditSup from "./Sups/CreateOrEditSup";
 import Sup from "./Sups/Sup";
-import { supLoader } from "./Sups/supLoader";
 import Sups from "./Sups/SupsTable";
+import { supLoader } from "./Sups/supLoader";
 import CreateOrEditTodo from "./Todos/CreateOrEditTodo";
 import Todo from "./Todos/Todo";
-import { todoLoader } from "./Todos/todoLoader";
 import { Todos } from "./Todos/Todos";
+import { todoLoader } from "./Todos/todoLoader";
 
 const router = createHashRouter([
   {
@@ -79,6 +79,10 @@ const router = createHashRouter([
         path: "todos/:itemId/edit",
         element: <CreateOrEditTodo />,
         loader: todoLoader,
+      },
+      {
+        index: true,
+        element: <Navigate to="/todos" replace />,
       },
     ],
   },
