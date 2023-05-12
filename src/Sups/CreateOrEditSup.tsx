@@ -71,12 +71,12 @@ export default function CreateOrEditSup() {
           const { summary, notes, todo_id } = values;
           const asyncWrapper = async () => {
             if (entry) {
-              const id = await db.sups.update(entry.id!, {
+              await db.sups.update(entry.id!, {
                 summary,
                 notes,
                 todo_id,
               });
-              navigate(`/sups/${id}`);
+              navigate(`/sups/${entry.id}`);
             } else {
               const id = await db.sups.add({
                 summary,
