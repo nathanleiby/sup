@@ -2,6 +2,7 @@ import {
   Burger,
   Container,
   createStyles,
+  Group,
   Header,
   MediaQuery,
   Tabs,
@@ -12,6 +13,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconRipple } from "@tabler/icons-react";
 import { NavLink } from "react-router-dom";
 import { db } from "./db";
+import { FocusSupButton } from "./Sups/FocusSupButton";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -110,7 +112,7 @@ interface HeaderTabsProps {
   user: { name: string; image: string };
 }
 
-export function HeaderTabsColored({ user }: HeaderTabsProps) {
+export function HeaderWithTabs({ user }: HeaderTabsProps) {
   const { theme } = useStyles();
   const [opened, { toggle }] = useDisclosure(false);
 
@@ -139,22 +141,25 @@ export function HeaderTabsColored({ user }: HeaderTabsProps) {
         {/* TODO: someday, use icons */}
         <Text ml="lg">{db.cloud.syncState.value.phase}</Text>
         <Container>
-          <Tabs>
-            <Tabs.List>
-              <NavLink to="/sups">
-                <Tabs.Tab value="sups">Sups</Tabs.Tab>
-              </NavLink>
-              <NavLink to="/todos">
-                <Tabs.Tab value="todos">Todos</Tabs.Tab>
-              </NavLink>
-              <NavLink to="/timeline">
-                <Tabs.Tab value="timeline">Timeline</Tabs.Tab>
-              </NavLink>
-              <NavLink to="/settings">
-                <Tabs.Tab value="settings">Settings</Tabs.Tab>
-              </NavLink>
-            </Tabs.List>
-          </Tabs>
+          <Group position="apart">
+            <Tabs>
+              <Tabs.List>
+                <NavLink to="/sups">
+                  <Tabs.Tab value="sups">Sups</Tabs.Tab>
+                </NavLink>
+                <NavLink to="/todos">
+                  <Tabs.Tab value="todos">Todos</Tabs.Tab>
+                </NavLink>
+                <NavLink to="/timeline">
+                  <Tabs.Tab value="timeline">Timeline</Tabs.Tab>
+                </NavLink>
+                <NavLink to="/settings">
+                  <Tabs.Tab value="settings">Settings</Tabs.Tab>
+                </NavLink>
+              </Tabs.List>
+            </Tabs>
+            <FocusSupButton />
+          </Group>
         </Container>
       </div>
     </Header>
