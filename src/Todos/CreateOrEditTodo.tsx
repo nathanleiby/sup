@@ -11,11 +11,11 @@ import {
 import { DatePickerInput } from "@mantine/dates";
 import { hasLength, useForm } from "@mantine/form";
 import { useFocusTrap } from "@mantine/hooks";
-import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { db, TodoItem } from "../db";
+import { useLiveQuery } from "../dexie-react-hooks";
 import { CheckboxStarIcon } from "./CheckboxStarIcon";
 import { todoLoaderData } from "./todoLoader";
 import { TagSelectItem, TagValue } from "./Value";
@@ -77,14 +77,17 @@ export default function CreateOrEditTodo() {
             values;
           const asyncWrapper = async () => {
             if (todo) {
-              const id = await db.todos.update(todo.id!, {
+              const changes = {
                 summary,
                 notes,
                 tags,
                 isComplete,
                 isStarred,
                 dueDate,
-              });
+              };
+              // eslint-disable-next-line
+              // @ts-ignore
+              await db.todos.update(todo.id, changes);
               navigate(`/todos/${todo.id}`);
             } else {
               const id = await db.todos.add({

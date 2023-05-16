@@ -1,6 +1,6 @@
-import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
 import { TodoItem, db } from "../db";
+import { useLiveQuery } from "../dexie-react-hooks";
 
 import type { MRT_ColumnDef } from "mantine-react-table";
 import { MantineReactTable } from "mantine-react-table";
@@ -41,9 +41,12 @@ export function Todos() {
             <Checkbox
               checked={record.isComplete}
               onChange={async (e) => {
-                await db.todos.update(record.id!, {
+                const changes = {
                   isComplete: e.target.checked,
-                });
+                };
+                // eslint-disable-next-line
+                // @ts-ignore
+                await db.todos.update(record.id, changes);
               }}
             />
           );
@@ -61,9 +64,12 @@ export function Todos() {
                 icon={CheckboxStarIcon}
                 checked={record.isStarred}
                 onChange={async (e) => {
-                  await db.todos.update(record.id!, {
+                  const changes = {
                     isStarred: e.target.checked,
-                  });
+                  };
+                  // eslint-disable-next-line
+                  // @ts-ignore
+                  await db.todos.update(record.id, changes);
                 }}
               />
             </Group>

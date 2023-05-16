@@ -1,7 +1,7 @@
 import { Button, Modal } from "@mantine/core";
-import { useLiveQuery } from "dexie-react-hooks";
 import { useState } from "react";
 import { db } from "../db";
+import { useLiveQuery } from "../dexie-react-hooks";
 import SupBox from "./SupCard";
 
 export function FocusSupButton() {

@@ -60,7 +60,7 @@ export default function Root() {
           }}
           navbarOffsetBreakpoint="sm"
           asideOffsetBreakpoint="sm"
-          header={<HeaderWithTabs user={{ name: "nathan", image: "" }} />}
+          header={<HeaderWithTabs />}
         >
           <Outlet />
         </AppShell>

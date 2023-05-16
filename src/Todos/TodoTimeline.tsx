@@ -1,9 +1,9 @@
 import { Text, Timeline } from "@mantine/core";
 import { IconGitBranch } from "@tabler/icons-react";
 import { formatRelative } from "date-fns";
-import { useLiveQuery } from "dexie-react-hooks";
 import { NavLink } from "react-router-dom";
 import { db } from "../db";
+import { useLiveQuery } from "../dexie-react-hooks";
 
 export interface TodoTimelineProps {
   todoID: string;

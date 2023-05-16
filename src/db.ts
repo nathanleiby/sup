@@ -1,5 +1,7 @@
-// db.ts
 import Dexie, { Table } from "dexie";
+// TODO: get types working with dexie-cloud-addon
+// eslint-disable-next-line
+// @ts-ignore
 import dexieCloud from "dexie-cloud-addon";
 
 export interface Entry {
@@ -25,6 +27,10 @@ export class MySubClassedDexie extends Dexie {
   sups!: Table<Entry>;
   todos!: Table<TodoItem>;
 
+  // eslint-disable-next-line
+  // @ts-ignore
+  // cloud: dexieCloud; // TODO
+
   constructor() {
     super("supDatabase", { addons: [dexieCloud] });
 
@@ -34,6 +40,8 @@ export class MySubClassedDexie extends Dexie {
         "@id, created_at, summary, notes, tags, isComplete, isStarred, dueDate",
     });
 
+    // eslint-disable-next-line
+    // @ts-ignore
     this.cloud.configure({
       databaseUrl: "https://z08fbafgx.dexie.cloud",
       requireAuth: true,

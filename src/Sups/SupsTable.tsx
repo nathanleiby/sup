@@ -1,5 +1,5 @@
-import { useLiveQuery } from "dexie-react-hooks";
 import { db, Entry } from "../db";
+import { useLiveQuery } from "../dexie-react-hooks";
 
 import { Button, Group, Stack } from "@mantine/core";
 import { formatRelative } from "date-fns";

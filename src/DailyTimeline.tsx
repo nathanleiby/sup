@@ -1,13 +1,12 @@
 import { Text, Timeline } from "@mantine/core";
 import { IconGitBranch } from "@tabler/icons-react";
 import { format, formatRelative } from "date-fns";
-import { useLiveQuery } from "dexie-react-hooks";
 import _ from "lodash";
 import { NavLink } from "react-router-dom";
-import { db, Entry } from "./db";
+import { Entry, db } from "./db";
+import { useLiveQuery } from "./dexie-react-hooks";
 
-export interface DailyTimelineProps {}
-export const DailyTimeline = (props: DailyTimelineProps) => {
+export const DailyTimeline = () => {
   const allSups = useLiveQuery(() => {
     return db.sups.reverse().sortBy("timestamp");
   });

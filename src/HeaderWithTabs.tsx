@@ -108,11 +108,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface HeaderTabsProps {
-  user: { name: string; image: string };
-}
-
-export function HeaderWithTabs({ user }: HeaderTabsProps) {
+export function HeaderWithTabs() {
   const { theme } = useStyles();
   const [opened, { toggle }] = useDisclosure(false);
   const { tabValue } = useParams();
@@ -141,6 +137,8 @@ export function HeaderWithTabs({ user }: HeaderTabsProps) {
           <IconRipple /> Sup
         </Title>
         {/* TODO: someday, use icons */}
+        {/* eslint-disable-next-line */}
+        {/* @ts-ignore */}
         <Text ml="lg">{db.cloud.syncState.value.phase}</Text>
         <Container>
           <Group position="apart">

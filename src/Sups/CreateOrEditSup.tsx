@@ -9,10 +9,10 @@ import {
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { useFocusTrap } from "@mantine/hooks";
-import { useLiveQuery } from "dexie-react-hooks";
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { db } from "../db";
+import { useLiveQuery } from "../dexie-react-hooks";
 import { supLoaderData } from "./supLoader";
 
 const schema = z.object({
