@@ -211,7 +211,6 @@ export function Todos() {
         columns={columns}
         data={filteredData2}
         enableColumnActions={false}
-        // enableColumnResizing
         initialState={{ density: "xs" }}
         enableHiding
         enableDensityToggle={false}
