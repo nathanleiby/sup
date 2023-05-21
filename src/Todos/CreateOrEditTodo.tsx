@@ -3,6 +3,7 @@ import {
   Button,
   Checkbox,
   Group,
+  Indicator,
   MultiSelect,
   Text,
   Textarea,
@@ -63,6 +64,7 @@ export default function CreateOrEditTodo() {
 
   const navigate = useNavigate();
   const focusRef = useFocusTrap();
+  const today = new Date();
 
   return (
     <>
@@ -137,6 +139,19 @@ export default function CreateOrEditTodo() {
         <DatePickerInput
           label="Due Date"
           mt="md"
+          renderDay={(date) => {
+            const day = date.getDate();
+            return (
+              <Indicator
+                size={6}
+                offset={-5}
+                disabled={date.getDate() !== today.getDate()}
+              >
+                <div>{day}</div>
+              </Indicator>
+            );
+          }}
+          clearable
           {...form.getInputProps("dueDate")}
         />
         <Group>
