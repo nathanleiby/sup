@@ -33,9 +33,11 @@ export function Todos() {
     () => [
       {
         header: "Is Complete",
-        enableSorting: true,
+        accessorKey: "isComplete",
         size: 40,
         maxSize: 100,
+        enableSorting: true,
+        sortUndefined: 1,
         accessorFn: (record) => {
           return (
             <Checkbox
@@ -54,15 +56,17 @@ export function Todos() {
       },
       {
         header: "Is Starred",
-        enableSorting: true,
+        accessorKey: "isStarred",
         size: 40,
         maxSize: 100,
-        accessorFn: (record) => {
+        enableSorting: true,
+        sortingFn: "basic",
+        Cell: ({ cell }) => {
           return (
             <Group>
               <Checkbox
                 icon={CheckboxStarIcon}
-                checked={record.isStarred}
+                checked={cell.getValue<boolean>()}
                 onChange={async (e) => {
                   const changes = {
                     isStarred: e.target.checked,
@@ -78,16 +82,18 @@ export function Todos() {
       },
       {
         header: "Summary",
-        accessorKey: "summary",
+        id: "summary",
         accessorFn: (record) => {
           return <NavLink to={`/todos/${record.id}`}>{record.summary}</NavLink>;
         },
         enableSorting: true,
-        // ellipsis: true,
       },
       {
         header: "Tags",
         accessorKey: "tags",
+        enableSorting: true,
+        sortingFn: "basic",
+        sortUndefined: 1,
         // TODO: Explore filtering by tags in arr
         // https://tanstack.com/table/v8/docs/api/features/filters?from=reactTableV7&original=https%3A%2F%2Freact-table-v7.tanstack.com%2Fdocs%2Fapi%2FuseGlobalFilter
         Cell: ({ cell }) => {
@@ -116,23 +122,33 @@ export function Todos() {
       {
         header: "Due Date",
         accessorKey: "dueDate",
+        enableSorting: true,
+        sortingFn: "datetime",
+        sortUndefined: 1,
         Cell: ({ cell }) => {
           const value = cell.getValue<Date | undefined>();
           if (!value) return;
-          return format(value, "yyyy-MM-dd");
+          const distance = formatDistance(value, new Date(), {
+            addSuffix: true,
+          });
+          const actualDate = format(value, "yyyy-MM-dd");
+          return `${actualDate} (${distance})`;
         },
       },
       {
         header: "Notes",
         accessorKey: "notes",
-        enableSorting: true,
       },
       {
         header: "Created At",
         accessorKey: "created_at",
         enableSorting: true,
-        accessorFn: (record) => {
-          return formatDistance(record.created_at, new Date(), {
+        sortingFn: "datetime",
+        sortUndefined: 1,
+        Cell: ({ cell }) => {
+          const value = cell.getValue<Date | undefined>();
+          if (!value) return;
+          return formatDistance(value, new Date(), {
             addSuffix: true,
           });
         },
@@ -153,13 +169,13 @@ export function Todos() {
     .uniq()
     .value();
 
-  const sortedAndFilteredData = filterByTags
+  const filteredData = filterByTags
     ? _.filter(data, (x) =>
         _.every(_.map(filterByTags, (t) => x.tags.includes(t)))
       )
     : data;
 
-  const sortedAndFilteredData2 = sortedAndFilteredData.filter((todo) =>
+  const filteredData2 = filteredData.filter((todo) =>
     hideCompletedTodos ? !todo.isComplete : true
   );
 
@@ -193,7 +209,7 @@ export function Todos() {
 
       <MantineReactTable
         columns={columns}
-        data={sortedAndFilteredData2}
+        data={filteredData2}
         enableColumnActions={false}
         // enableColumnResizing
         initialState={{ density: "xs" }}
