@@ -13,6 +13,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconRipple } from "@tabler/icons-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { db } from "./db";
+import { useObservable } from "./dexie-react-hooks";
 import { FocusSupButton } from "./Sups/FocusSupButton";
 
 const useStyles = createStyles((theme) => ({
@@ -30,6 +31,9 @@ export function HeaderWithTabs() {
   const [opened, { toggle }] = useDisclosure(false);
   const { tabValue } = useParams();
   const navigate = useNavigate();
+  /* eslint-disable-next-line */
+  /* @ts-ignore */
+  const user = useObservable<UserLogin>(db.cloud.currentUser); // https://dexie.org/cloud/docs/UserLogin
 
   return (
     <Header height={{ base: 50, md: 70 }} p="md">
@@ -75,6 +79,7 @@ export function HeaderWithTabs() {
             <FocusSupButton />
           </Group>
         </Container>
+        <Text>{user.isLoggedIn ? `User = ${user.name}` : undefined}</Text>
       </div>
     </Header>
   );
