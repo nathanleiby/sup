@@ -70,13 +70,13 @@ export async function initStoragePersistence() {
   const output = await tryPersistWithoutPromtingUser();
   switch (output) {
     case "never":
-      console.log("Not possible to persist storage");
+      console.debug("Not possible to persist storage");
       break;
     case "persisted":
-      console.log("Successfully persisted storage silently");
+      console.debug("Successfully persisted storage silently");
       break;
     case "prompt":
-      console.log("Not persisted, but we may prompt user when we want to.");
+      console.debug("Not persisted, but we may prompt user when we want to.");
       await persist();
       break;
   }
