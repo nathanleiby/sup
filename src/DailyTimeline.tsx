@@ -2,6 +2,7 @@ import { Text, Timeline } from "@mantine/core";
 import { IconGitBranch } from "@tabler/icons-react";
 import { format, formatRelative } from "date-fns";
 import _ from "lodash";
+import { Fragment } from "react";
 import { NavLink } from "react-router-dom";
 import { Entry, db } from "./db";
 import { useLiveQuery } from "./dexie-react-hooks";
@@ -22,13 +23,13 @@ export const DailyTimeline = () => {
     <>
       {_.map(supsByDate, (sups, supsDate) => {
         return (
-          <>
+          <Fragment key={supsDate}>
             <Text mb="md" size={24}>
               {supsDate}
             </Text>
             <SingleTimeline sups={sups} />
             <Text mb="md" />
-          </>
+          </Fragment>
         );
       })}
     </>
