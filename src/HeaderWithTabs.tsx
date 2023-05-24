@@ -1,5 +1,6 @@
 import {
   Burger,
+  Button,
   Container,
   createStyles,
   Group,
@@ -77,6 +78,16 @@ export function HeaderWithTabs() {
               </Tabs.List>
             </Tabs>
             <FocusSupButton />
+            <Button
+              // eslint-disable-next-line
+              // @ts-ignore
+              disabled={db.cloud.syncState.value.phase !== "in-sync"}
+              // eslint-disable-next-line
+              // @ts-ignore
+              onClick={() => db.cloud.sync()}
+            >
+              Sync
+            </Button>
           </Group>
         </Container>
         <Text>{user.isLoggedIn ? `User = ${user.name}` : undefined}</Text>
