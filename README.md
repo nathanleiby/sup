@@ -9,15 +9,23 @@ Requires using an email address to initialize cloud data storage (via Dexie Clou
 
 ## Development
 
+### Deps
+
+Install `asdf` to manage node versions.
+
+On Mac:
+
+- `brew install asdf`
+- `asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git`
+- `asdf install`
+
+Now you can install deps:
+
+```
+npm install
+```
+
 ### Running Locally
-
-Because of `dexie-react-hooks`, need to install deps via:
-
-```
-npm i --legacy-peer-deps
-```
-
-Then can run app locally via:
 
 ```
 npm run dev
